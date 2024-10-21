@@ -2,6 +2,7 @@
 #include <FirebaseESP32.h>
 #include <Arduino.h>
 #include "SensorLogic.h"
+#include "PhotoResistor.h"
 
 // Dashboard
 int counter1 = 0;
@@ -17,6 +18,7 @@ FirebaseConfig config;
 void setup() {
   {  //PinMode
     initializeMotionSensors();
+    setupPhotoResistor();
     Serial.begin(115200);
   }
 
@@ -43,5 +45,7 @@ void setup() {
 }
 
 void loop() {
+  // Photoresistor
+  photoResistorLogic();
   handleTrafficLights(handleSensorMotion());
 }
