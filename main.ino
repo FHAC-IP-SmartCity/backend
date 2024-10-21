@@ -1,8 +1,7 @@
 #include <WiFi.h>
 #include <FirebaseESP32.h>
 #include <Arduino.h>
-#include "TrafficLightControl.h"
-#include "MotionSensorControl.h"
+#include "SensorLogic.h"
 
 // Dashboard
 int counter1 = 0;
@@ -17,7 +16,6 @@ FirebaseConfig config;
 
 void setup() {
   {  //PinMode
-    initializeTrafficLights();
     initializeMotionSensors();
     Serial.begin(115200);
   }
@@ -45,7 +43,5 @@ void setup() {
 }
 
 void loop() {
-  processMotionSensors();
-  // Normale Ampellogik
-  handleTrafficLights();
+  handleTrafficLights(handleSensorMotion());
 }
