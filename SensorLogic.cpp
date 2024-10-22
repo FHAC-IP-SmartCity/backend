@@ -108,6 +108,8 @@ void handleTrafficLights(int switchNum)
     break;
   case 3:
     // Switch lights
+    digitalWrite(GREEN_LIGHT_PIN_1, LOW);
+    digitalWrite(GREEN_LIGHT_PIN_2, LOW);
     digitalWrite(YELLOW_LIGHT_PIN, HIGH);
     delay(3000);
     digitalWrite(YELLOW_LIGHT_PIN, LOW);
@@ -123,11 +125,13 @@ void handleTrafficLights(int switchNum)
     if (currentMillis - lastSwitchMillis >= 20000)
     {
       // Default case
+      digitalWrite(GREEN_LIGHT_PIN_1, LOW);
+      digitalWrite(GREEN_LIGHT_PIN_2, LOW);
       digitalWrite(YELLOW_LIGHT_PIN, HIGH);
       delay(3000);
       digitalWrite(YELLOW_LIGHT_PIN, LOW);
 
-      if (digitalRead(GREEN_LIGHT_PIN_1) == HIGH)
+      if (digitalRead(RED_LIGHT_PIN_2) == HIGH)
       {
         digitalWrite(GREEN_LIGHT_PIN_1, LOW);
         digitalWrite(RED_LIGHT_PIN_1, HIGH);

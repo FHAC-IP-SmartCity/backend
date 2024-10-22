@@ -8,7 +8,6 @@ void setupPhotoResistor() {
     pinMode(GREEN_PIN, OUTPUT);  // Du kannst das Grün auch hinzufügen, wenn du möchtest.
     pinMode(BLUE_PIN, OUTPUT);
     pinMode(PHOTO_RESISTOR_PIN, INPUT);
-    Serial.begin(115200);
 }
 
 void photoResistorLogic() {
@@ -31,5 +30,5 @@ void photoResistorLogic() {
   // Optional: falls du auch Grün verwenden möchtest (kann z.B. für mittlere Helligkeit verwendet werden)
   // analogWrite(GREEN_PIN, (redValue + blueValue) / 2);
 
-  delay(100);  // Kleine Pause
+  delay(1000);  // Kleine Pause
 }

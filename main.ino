@@ -3,6 +3,7 @@
 #include <Arduino.h>
 #include "SensorLogic.h"
 #include "PhotoResistor.h"
+#include "Thermistor.h"
 
 // Dashboard
 int counter1 = 0;
@@ -19,6 +20,7 @@ void setup() {
   {  //PinMode
     initializeMotionSensors();
     setupPhotoResistor();
+    setupThermistor();
     Serial.begin(115200);
   }
 
@@ -47,5 +49,6 @@ void setup() {
 void loop() {
   // Photoresistor
   photoResistorLogic();
+  thermistorLogic();
   handleTrafficLights(handleSensorMotion());
 }
