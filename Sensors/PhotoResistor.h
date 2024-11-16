@@ -7,6 +7,7 @@
 #define GREEN_PIN 0 //27
 #define LIGHT_THRESHOLD 1500
 
+//TODO: Automatisieren durch bessere Pinbelegung
 void setupPhotoResistor();
 void photoResistorLogic();
 

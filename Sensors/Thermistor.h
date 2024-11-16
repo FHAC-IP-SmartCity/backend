@@ -13,7 +13,7 @@
 #define SUPPLY_VOLTAGE 3.3  // Versorgungsspannung
 
 
-
+//TODO: Automatisieren durch bessere Pinbelegung
 void setupThermistor();
 void thermistorLogic();
 
