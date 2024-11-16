@@ -53,4 +53,6 @@ void setup()
 void loop()
 {
   handleTrafficLights(handleSensorMotion(12), 27, 12, 25, 26, 14);
+  photoResistorLogic();
+  thermistorLogic();
 }
