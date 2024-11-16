@@ -12,15 +12,16 @@ int counter2 = 0;
 FirebaseData firebaseData;
 FirebaseAuth auth;
 FirebaseConfig config;
+require('dotenv').config();
+const host = process.env.FIREBASE_API_HOST;
+const token = process.env.FIREBASE_API_TOKEN;
 
-#define FIREBASE_HOST "ip-test-329c7-default-rtdb.europe-west1.firebasedatabase.app"
-#define FIREBASE_AUTH "H904ZEzTA0YE1j6dkxC0u8VcXtRI6fUeSYsGmfAC"
+#define FIREBASE_HOST host
+#define FIREBASE_AUTH token
 
 void setup() {
   {  //PinMode
     initializeMotionSensors();
-    setupPhotoResistor();
-    setupThermistor();
     Serial.begin(115200);
   }
 
@@ -47,8 +48,5 @@ void setup() {
 }
 
 void loop() {
-  // Photoresistor
-  photoResistorLogic();
-  thermistorLogic();
   handleTrafficLights(handleSensorMotion());
 }
