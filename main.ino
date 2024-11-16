@@ -13,8 +13,8 @@ FirebaseData firebaseData;
 FirebaseAuth auth;
 FirebaseConfig config;
 
-#define FIREBASE_HOST "ip-test-329c7-default-rtdb.europe-west1.firebasedatabase.app"
-#define FIREBASE_AUTH "H904ZEzTA0YE1j6dkxC0u8VcXtRI6fUeSYsGmfAC"
+//#define FIREBASE_HOST "ip-test-329c7-default-rtdb.europe-west1.firebasedatabase.app"
+//#define FIREBASE_AUTH ""
 
 void setup() {
   {  //PinMode
@@ -33,7 +33,7 @@ void setup() {
     Serial.println("Connected to Wi-Fi");
   }
 
-  {  // Firebase-Config
+  /*{  // Firebase-Config
     config.host = FIREBASE_HOST;
     config.signer.tokens.legacy_token = FIREBASE_AUTH;
 
@@ -43,7 +43,7 @@ void setup() {
     } else {
       Serial.println("Failed to connect to Firebase");
     }
-  }
+  }*/
 }
 
 void loop() {
