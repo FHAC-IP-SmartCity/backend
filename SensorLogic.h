@@ -12,9 +12,9 @@
 extern unsigned long currentMillis;
 
 void IRAM_ATTR pirISR1();
-void initializeMotionSensors();
-int handleSensorMotion();
+void initializeMotionSensors(int PIR, int RED1, int GREEN1, int RED2, int GREEN2, int YELLOW);
+int handleSensorMotion(int GREEN1);
 unsigned long handleTrafficLightsWithMillis();
-void handleTrafficLights(int switchNum);
+void handleTrafficLights(int switchNum, int RED1, int GREEN1, int RED2, int GREEN2, int YELLOW);
 
 #endif

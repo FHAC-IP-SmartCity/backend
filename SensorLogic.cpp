@@ -7,19 +7,19 @@ unsigned long currentMillis = 0;
 int TLClock = 20000;
 
 // Initialisiere die Bewegungssensoren
-void initializeMotionSensors()
+void initializeMotionSensors(int PIR, int RED1, int GREEN1, int RED2, int GREEN2, int YELLOW)
 {
-  pinMode(PIR_SENSOR_PIN_1, INPUT);
-  // TLC
-  pinMode(RED_LIGHT_PIN_1, OUTPUT);
-  pinMode(GREEN_LIGHT_PIN_1, OUTPUT);
-  pinMode(RED_LIGHT_PIN_2, OUTPUT);
-  pinMode(GREEN_LIGHT_PIN_2, OUTPUT);
-  pinMode(YELLOW_LIGHT_PIN, OUTPUT);
+  // Config Pins
+  pinMode(PIR, INPUT);
+  pinMode(RED1, OUTPUT);
+  pinMode(GREEN1, OUTPUT);
+  pinMode(RED2, OUTPUT);
+  pinMode(GREEN2, OUTPUT);
+  pinMode(YELLOW, OUTPUT);
 
   // Config Interrupts
-  attachInterrupt(digitalPinToInterrupt(PIR_SENSOR_PIN_1), pirISR1, RISING);
-  digitalWrite(RED_LIGHT_PIN_1, HIGH);
+  attachInterrupt(digitalPinToInterrupt(PIR), pirISR1, RISING);
+  digitalWrite(RED1, HIGH);
 }
 
 // ISR
@@ -29,14 +29,14 @@ void IRAM_ATTR pirISR1()
 }
 
 // hanldes the motion sensor
-int handleSensorMotion()
+int handleSensorMotion(int GREEN1)
 {
   if (fstMotionDetected)
   {
     int switchNum = 0;
 
     // Check which traffic light is green
-    bool fstTLGreen = digitalRead(GREEN_LIGHT_PIN_1) == HIGH;
+    bool fstTLGreen = digitalRead(GREEN1) == HIGH;
 
     // Check if more than 7 seconds have passed
     // True if more than 7 seconds have passed
@@ -88,7 +88,7 @@ unsigned long handleTrafficLightsWithMillis()
   return currentMillis;
 }
 
-void handleTrafficLights(int switchNum)
+void handleTrafficLights(int switchNum, int RED1, int GREEN1, int RED2, int GREEN2, int YELLOW)
 {
   static unsigned long lastSwitchMillis = 0;
   currentMillis = millis();
@@ -97,10 +97,10 @@ void handleTrafficLights(int switchNum)
   {
   case 1:
     // Extend time
-    digitalWrite(GREEN_LIGHT_PIN_1, HIGH);
-    digitalWrite(RED_LIGHT_PIN_1, LOW);
-    digitalWrite(GREEN_LIGHT_PIN_2, LOW);
-    digitalWrite(RED_LIGHT_PIN_2, HIGH);
+    digitalWrite(GREEN1, HIGH);
+    digitalWrite(RED1, LOW);
+    digitalWrite(GREEN2, LOW);
+    digitalWrite(RED2, HIGH);
     lastSwitchMillis = currentMillis;
     break;
 
@@ -108,16 +108,16 @@ void handleTrafficLights(int switchNum)
     break;
   case 3:
     // Switch lights
-    digitalWrite(GREEN_LIGHT_PIN_1, LOW);
-    digitalWrite(GREEN_LIGHT_PIN_2, LOW);
-    digitalWrite(YELLOW_LIGHT_PIN, HIGH);
+    digitalWrite(GREEN1, LOW);
+    digitalWrite(GREEN2, LOW);
+    digitalWrite(YELLOW, HIGH);
     delay(3000);
-    digitalWrite(YELLOW_LIGHT_PIN, LOW);
+    digitalWrite(YELLOW, LOW);
 
-    digitalWrite(GREEN_LIGHT_PIN_1, HIGH);
-    digitalWrite(RED_LIGHT_PIN_1, LOW);
-    digitalWrite(GREEN_LIGHT_PIN_2, LOW);
-    digitalWrite(RED_LIGHT_PIN_2, HIGH);
+    digitalWrite(GREEN1, HIGH);
+    digitalWrite(RED1, LOW);
+    digitalWrite(GREEN2, LOW);
+    digitalWrite(RED2, HIGH);
     lastSwitchMillis = currentMillis;
     break;
 
@@ -125,25 +125,25 @@ void handleTrafficLights(int switchNum)
     if (currentMillis - lastSwitchMillis >= 20000)
     {
       // Default case
-      digitalWrite(GREEN_LIGHT_PIN_1, LOW);
-      digitalWrite(GREEN_LIGHT_PIN_2, LOW);
-      digitalWrite(YELLOW_LIGHT_PIN, HIGH);
+      digitalWrite(GREEN1, LOW);
+      digitalWrite(GREEN2, LOW);
+      digitalWrite(YELLOW, HIGH);
       delay(3000);
-      digitalWrite(YELLOW_LIGHT_PIN, LOW);
+      digitalWrite(YELLOW, LOW);
 
-      if (digitalRead(RED_LIGHT_PIN_2) == HIGH)
+      if (digitalRead(RED2) == HIGH)
       {
-        digitalWrite(GREEN_LIGHT_PIN_1, LOW);
-        digitalWrite(RED_LIGHT_PIN_1, HIGH);
-        digitalWrite(GREEN_LIGHT_PIN_2, HIGH);
-        digitalWrite(RED_LIGHT_PIN_2, LOW);
+        digitalWrite(GREEN1, LOW);
+        digitalWrite(RED1, HIGH);
+        digitalWrite(GREEN2, HIGH);
+        digitalWrite(RED2, LOW);
       }
       else
       {
-        digitalWrite(GREEN_LIGHT_PIN_1, HIGH);
-        digitalWrite(RED_LIGHT_PIN_1, LOW);
-        digitalWrite(GREEN_LIGHT_PIN_2, LOW);
-        digitalWrite(RED_LIGHT_PIN_2, HIGH);
+        digitalWrite(GREEN1, HIGH);
+        digitalWrite(RED1, LOW);
+        digitalWrite(GREEN2, LOW);
+        digitalWrite(RED2, HIGH);
       }
       lastSwitchMillis = currentMillis;
       break;
