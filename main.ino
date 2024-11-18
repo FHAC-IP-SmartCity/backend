@@ -7,6 +7,7 @@
 #include "BusLogic/BusDetector.h"
 #include "BusLogic/CardRead.h"
 #include "BusLogic/CardWrite.h"
+#include "pipeline.h"
 #include "config.h"
 
 // Dashboard
@@ -23,25 +24,25 @@ int counter2 = 0;
 void setup()
 {
   { // PinMode
+    pipeline.open();
+    Serial.begin(115200);
     // initializeMotionSensors(32, 27, 12, 25, 26, 14);
     //  setupBusDetector();
     //  setupPhotoResistor();
     //  setupThermistor();
-    setupRFIDRead();
-    // setupRFIDWrite();
-
-    Serial.begin(115200);
+        setupRFIDRead();
+    // setupRFIDWrite();  
   }
 
-  { // Wifi-Config
-    WiFi.begin("Amier", "nxkx4920");
-    while (WiFi.status() != WL_CONNECTED)
-    {
-      delay(1000);
-      Serial.println("Connecting to Wi-Fi...");
-    }
-    Serial.println("Connected to Wi-Fi");
-  }
+  // { // Wifi-Config
+  //   WiFi.begin("Amier", "nxkx4920");
+  //   while (WiFi.status() != WL_CONNECTED)
+  //   {
+  //     delay(1000);
+  //     Serial.println("Connecting to Wi-Fi...");
+  //   }
+  //   Serial.println("Connected to Wi-Fi");
+  // }
 
   // { // Firebase-Config
   //   config.host = FIREBASE_HOST;
@@ -65,14 +66,16 @@ void loop()
   // photoResistorLogic();
   // thermistorLogic();
   //  busDetector();
+  pipeline.ping();
   readDataFromCard();
+  pipeline.send(1, "Hallo", 4);
   // writeDataToCard("Bus2");
-  {
-    Serial.print("Free heap memory: ");
-    Serial.println(ESP.getFreeHeap());
+  // {
+  //   Serial.print("Free heap memory: ");
+  //   Serial.println(ESP.getFreeHeap());
 
-    Serial.print("Free sketch space: ");
-    Serial.println(ESP.getFreeSketchSpace());
-  }
+  //   Serial.print("Free sketch space: ");
+  //   Serial.println(ESP.getFreeSketchSpace());
+  // }
   delay(3000);
 }
