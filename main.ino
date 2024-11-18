@@ -18,6 +18,7 @@ int counter2 = 0;
 // FirebaseAuth auth;
 // FirebaseConfig config;
 
+
 // #define FIREBASE_HOST FIREBASE_API_HOST
 // #define FIREBASE_AUTH FIREBASE_API_TOKEN
 
@@ -44,6 +45,7 @@ void setup()
   //   Serial.println("Connected to Wi-Fi");
   // }
 
+
   // { // Firebase-Config
   //   config.host = FIREBASE_HOST;
   //   config.signer.tokens.legacy_token = FIREBASE_AUTH;
@@ -58,6 +60,7 @@ void setup()
   //     Serial.println("Failed to connect to Firebase");
   //   }
   // }
+
 }
 
 void loop()
