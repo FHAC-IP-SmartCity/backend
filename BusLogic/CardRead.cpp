@@ -28,7 +28,7 @@ void readDataFromCard()
     if (status == MFRC522::STATUS_OK)
     {
         std::string message = std::string((char*)buffer);
-        pipeline.send(11, (char *)buffer, message.length());
+        pipeline.send(110, (char *)buffer, message.length());
     }
 
     rfid.PICC_HaltA();

@@ -66,9 +66,7 @@ void loop()
   // photoResistorLogic();
   // thermistorLogic();
   //  busDetector();
-  pipeline.ping();
   readDataFromCard();
-  pipeline.send(1, "Hallo", 4);
   // writeDataToCard("Bus2");
   // {
   //   Serial.print("Free heap memory: ");
