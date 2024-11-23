@@ -1,4 +1,4 @@
-#include "Thermistor.h"
+#include "Sensors/Thermistor.h"
 
 void setupThermistor() {
   pinMode(THERMISTOR_PIN, INPUT);

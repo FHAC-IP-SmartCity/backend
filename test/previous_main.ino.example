@@ -1,4 +1,4 @@
-#include <WiFi.h>
+//#include <WiFi.h>
 // #include <FirebaseESP32.h>
 #include <Arduino.h>
 // #include "TrafficLightLogic/SensorLogic.h"

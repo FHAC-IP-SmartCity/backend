@@ -1,4 +1,5 @@
-#include "CardWrite.h"
+#include "BusLogic/CardWrite.h"
+#include "pipeline.h"
 
 void setupRFIDWrite() {
     SPI.begin(18, 19, 23, 21);  // ESP32 SPI-Pins
