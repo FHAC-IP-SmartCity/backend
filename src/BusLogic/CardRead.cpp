@@ -27,7 +27,7 @@ void readDataFromCard()
     MFRC522::StatusCode status = rfid.MIFARE_Read(sector * 4, buffer, &size);
     if (status == MFRC522::STATUS_OK)
     {
-        std::string message = std::string((char*)buffer);
+        std::string message = std::string((char *)buffer);
         pipeline.send(110, (char *)buffer, message.length());
     }
 

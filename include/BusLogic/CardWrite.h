@@ -3,9 +3,9 @@
 
 #include <SPI.h>
 #include <MFRC522.h>
-    
+
 extern MFRC522 rfid;
 void setupRFIDWrite();
-void writeDataToCard(const char* data);
+void writeDataToCard(const char *data);
 
 #endif // CARDWRITE_H

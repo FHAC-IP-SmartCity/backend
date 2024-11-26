@@ -6,7 +6,7 @@ void setup()
 {
   Serial.begin(115200);
   pipeline.open();
-  setupRFIDRead(); 
+  setupRFIDRead();
 }
 
 void loop()

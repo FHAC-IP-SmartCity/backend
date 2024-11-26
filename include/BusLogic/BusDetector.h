@@ -6,7 +6,7 @@
 
 // Define the pins for the RFID reader
 #define SS_PIN 21  // SDA pin
-#define RST_PIN 22  // RST pin
+#define RST_PIN 22 // RST pin
 
 // Declare the RFID instance as extern
 extern MFRC522 rfid;

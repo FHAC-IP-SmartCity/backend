@@ -1,6 +1,5 @@
 #include "TrafficLightLogic/SensorLogic.h"
 
-
 volatile bool fstMotionDetected = false;
 volatile bool sndMotionDetected = false;
 unsigned long currentMillis = 0;
