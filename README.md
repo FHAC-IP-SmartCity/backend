@@ -45,6 +45,7 @@ Installiere VSCode (falls noch nicht geschehen).
 Installiere die PlatformIO IDE-Erweiterung für VSCode:
 Öffne VSCode und gehe zu "Extensions" (Erweiterungen) und suche nach PlatformIO.
 Installiere die PlatformIO IDE-Erweiterung.
+
 2. Übertrage das Projekt
 Kopiere den gesamten Projektordner auf den neuen PC. Das bedeutet, du musst den gesamten Ordner, der die PlatformIO-Projektdatei (platformio.ini), den Code und die Bibliotheken enthält, auf den neuen PC übertragen.
 
@@ -53,13 +54,13 @@ In der platformio.ini-Datei sind bereits einige Abhängigkeiten konfiguriert, z.
 
 Wenn du zusätzliche Abhängigkeiten verwendest (wie dotenv in deinem Beispiel), musst du sicherstellen, dass diese ebenfalls auf dem neuen PC installiert sind. Du kannst dies durch den Befehl in der PlatformIO-CLI tun:
 
-pio lib install
+`pio lib install`
 Der lib_deps Abschnitt in der platformio.ini-Datei listet bereits die benötigten Bibliotheken auf.
 
 4. Überprüfe den Pfad zu den Bibliotheken
 In der platformio.ini wird der Pfad zu den zusätzlichen Bibliotheken (lib_extra_dirs) angegeben:
 
-lib_extra_dirs = ~/Documents/Arduino/libraries
+`lib_extra_dirs = ~/Documents/Arduino/libraries`
 Achte darauf, dass der Pfad korrekt auf das Verzeichnis der Arduino-Bibliotheken auf dem neuen PC verweist. Wenn der Pfad unterschiedlich ist, musst du den Pfad zu den Bibliotheken in der platformio.ini anpassen.
 
 Alternativ kannst du diese Bibliotheken direkt im Projektordner ablegen, um diese Abhängigkeit zu vermeiden.
@@ -70,7 +71,7 @@ Installiere Node.js, falls noch nicht geschehen (über nodejs.org).
 
 Installiere die Abhängigkeiten:
 
-npm install
+`npm install`
 Dadurch wird die dotenv-Abhängigkeit und alle weiteren Abhängigkeiten aus der package.json installiert.
 
 6. Komponenten und Bibliotheken
@@ -84,16 +85,18 @@ PlatformIO sollte die platformio.ini-Datei automatisch erkennen und alle Abhäng
 
 Du kannst das Projekt auch über die PlatformIO CLI mit dem folgenden Befehl öffnen:
 
-pio project init
+`pio project init`
 8. Upload und Serial Monitor
 Wenn alles eingerichtet ist, kannst du dein Projekt auf das Zielgerät hochladen und den Serial Monitor öffnen:
 
 Lade das Projekt hoch:
 
-pio run --target upload
+`pio run --target upload`
+(Müsste auch über die Extension funktioniern, wenn du oben rechts auf das Icon klickst.
+
 Öffne den Serial Monitor:
 
-pio device monitor
+`pio device monitor`
 Damit solltest du dein Projekt problemlos auf einem anderen PC zum Laufen bringen können. Stelle sicher, dass alle Bibliotheken und Abhängigkeiten korrekt installiert sind und dass alle Hardwarekomponenten ordnungsgemäß angeschlossen sind.
 
 Library von PlatformIO
