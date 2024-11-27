@@ -2,7 +2,7 @@
 #include "pipeline.h"
 
 // Define the RFID instance
-MFRC522 rfid(SS_PIN, RST_PIN);
+extern MFRC522 rfid;
 
 void setupRFID()
 {
