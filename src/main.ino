@@ -1,6 +1,9 @@
 #include <Arduino.h>
 #include "BusLogic/CardRead.h"
 #include "pipeline.h"
+#include <Adafruit_Sensor.h>
+#include <Adafruit_BME680.h>
+#include <BH1750.h>
 
 void setup()
 {
