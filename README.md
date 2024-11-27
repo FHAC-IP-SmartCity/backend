@@ -78,6 +78,7 @@ Dadurch wird die dotenv-Abhängigkeit und alle weiteren Abhängigkeiten aus der 
 Wenn dein Projekt spezielle Hardwarekomponenten wie den ESP32 oder einen RFID-Reader verwendet, stelle sicher, dass du die entsprechenden Treiber und Tools für diese Geräte installiert hast.
 
 Der ESP32-Treiber wird in PlatformIO bereits mit der platform = espressif32-Zeile konfiguriert, aber stelle sicher, dass du die entsprechenden USB-Treiber für den ESP32 auf dem neuen PC installiert hast, falls dies erforderlich ist.
+
 7. Projekt in PlatformIO öffnen
 Öffne das Projekt im VSCode mit PlatformIO.
 
@@ -86,6 +87,7 @@ PlatformIO sollte die platformio.ini-Datei automatisch erkennen und alle Abhäng
 Du kannst das Projekt auch über die PlatformIO CLI mit dem folgenden Befehl öffnen:
 
 `pio project init`
+
 8. Upload und Serial Monitor
 Wenn alles eingerichtet ist, kannst du dein Projekt auf das Zielgerät hochladen und den Serial Monitor öffnen:
 
