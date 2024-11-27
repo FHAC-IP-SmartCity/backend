@@ -1,14 +1,21 @@
 #ifndef PHOTORESISTOR_H
+#define PHOTORESISTOR_H
+
 #include <Arduino.h>
+#include "Sensors/SenosorData.h"
 
-#define PHOTO_RESISTOR_PIN 36 // 34
-#define RED_PIN 0             // 25
-#define BLUE_PIN 0            // 26
-#define GREEN_PIN 0           // 27
-#define LIGHT_THRESHOLD 1500
+class PhotoResistor
+{
+private:
+    const uint8_t photoResistorPin = 36;
+    const uint8_t redPin = 0;
+    const uint8_t bluePin = 0;
+    const uint8_t greenPin = 0;
+    const int lightThreshold = 1500;
 
-// TODO: Automatisieren durch bessere Pinbelegung
-void setupPhotoResistor();
-void photoResistorLogic();
+public:
+    void setup();
+    void readData(SensorData &data);
+};
 
 #endif
