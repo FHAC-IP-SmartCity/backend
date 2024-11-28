@@ -6,15 +6,10 @@
 
 class RFIDWrite
 {
-<<<<<<< HEAD
-  pipeline.open();
-  setupRFIDRead();
-=======
 private:
     MFRC522 rfid;
     int ssPin;
     int rstPin;
->>>>>>> 53527ad0972c9167e4b61e117487a664f8b2545f
 
 public:
     RFIDWrite(int ssPin, int rstPin);
