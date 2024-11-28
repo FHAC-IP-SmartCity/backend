@@ -10,24 +10,26 @@ uint8_t slaveMac[] = {0xA0, 0xB7, 0x65, 0x2D, 0x78, 0x3C};
 RFIDReader rfidReader(21, 22);
 ESPNowDevice master(slaveMac);
 
-void onReceive(const uint8_t *mac, const uint8_t *data, int len)
+void masterOnReceive(const uint8_t *mac, const uint8_t *data, int len)
 {
     pipeline.println("Quittung empfangen: ");
     pipeline.println((char *)data);
 }
 
-void init()
+void masterInit()
 {
     rfidReader.init();
-    master.init(onReceive);
+    master.init(masterOnReceive);
 }
 
-void loop()
+void masterLoop()
 {
     std::string cardData;
-    if (rfidReader.readCard(cardData))
+    if (rfidReader.readCard(1))
     {
-        pipeline.println(strcat("RFID-Daten gelesen: ", cardData.c_str()));
+        pipeline.println("RFID-Daten gelesen: ");
+        cardData = (char *)rfidReader.getBuffer();
+        pipeline.println(cardData.c_str());
 
         if (master.send(cardData))
         {

@@ -2,16 +2,15 @@
 
 RFIDReader::RFIDReader(uint8_t ssPin, uint8_t rstPin) : ssPin(ssPin), rstPin(rstPin), rfid(ssPin, rstPin)
 {
-    // Standard-Schlüssel initialisieren
     for (uint8_t i = 0; i < 6; i++)
         defaultKey.keyByte[i] = 0xFF;
 }
 
 void RFIDReader::init()
 {
-    SPI.begin(); // SPI initialisieren
+    SPI.begin();
     rfid.PCD_Init();
-    Serial.println("RFID-Reader initialisiert.");
+    pipeline.println("RFID-Reader initialisiert.");
 }
 
 bool RFIDReader::isCardPresent()
@@ -30,7 +29,7 @@ bool RFIDReader::authenticate(uint8_t sector)
     return true;
 }
 
-bool RFIDReader::readCard(std::string &data, uint8_t sector)
+bool RFIDReader::readCard(uint8_t sector)
 {
     if (!isCardPresent())
         return false;
@@ -38,7 +37,8 @@ bool RFIDReader::readCard(std::string &data, uint8_t sector)
     if (!authenticate(sector))
         return false;
 
-    byte buffer[18];
+    memset(buffer, 0, sizeof(buffer));
+
     byte size = sizeof(buffer);
     MFRC522::StatusCode status = rfid.MIFARE_Read(sector * 4, buffer, &size);
     if (status != MFRC522::STATUS_OK)
@@ -47,10 +47,15 @@ bool RFIDReader::readCard(std::string &data, uint8_t sector)
         return false;
     }
 
-    data.assign((char *)buffer, size);
     rfid.PICC_HaltA();
     rfid.PCD_StopCrypto1();
+
     return true;
+}
+
+byte *RFIDReader::getBuffer()
+{
+    return buffer;
 }
 
 bool RFIDReader::writeCard(const std::string &data, uint8_t sector)
@@ -72,7 +77,7 @@ bool RFIDReader::writeCard(const std::string &data, uint8_t sector)
         return false;
     }
 
-    Serial.println("Daten erfolgreich geschrieben.");
+    pipeline.println("Daten erfolgreich geschrieben.");
     rfid.PICC_HaltA();
     rfid.PCD_StopCrypto1();
     return true;

@@ -18,14 +18,14 @@
 // MicrophoneSensor micSensor;
 // Thermistor thermistor;
 // PhotoResistor photoResistor;
-RFIDReader macReader;
+RFIDReader rfid(21, 22);
 std::string data;
 
-void init()
+void setup()
 {
 
     pipeline.open();
-    macReader.begin();
+    rfid.init();
 
     // bme680.init();
     // bh1750.init();
@@ -43,7 +43,7 @@ void loop()
         pipeline.open();
     }
 
-    macReader.readCard(data);
+    rfid.readCard();
 
     // Daten von den Sensoren auslesen
     // bme680.read(sensorData);
