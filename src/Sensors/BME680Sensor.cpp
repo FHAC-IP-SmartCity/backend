@@ -12,14 +12,17 @@ void BME680Sensor::init()
     pipeline.println("BME680 erfolgreich initialisiert!");
 }
 
-void BME680Sensor::read(SensorData &data)
+void BME680Sensor::read()
 {
     if (bme.performReading())
     {
-        data.temperature = bme.temperature;
-        data.humidity = bme.humidity;
-        data.pressure = bme.pressure / 100.0;
-        data.gasResistance = bme.gas_resistance / 1000.0;
+        pipeline.println("Temperatur: ");
+        pipeline.println(bme.temperature);
+        pipeline.println(" °C, Luftfeuchtigkeit: ");
+        pipeline.println(bme.humidity);
+        pipeline.println(" %, Luftdruck: ");
+        pipeline.println(bme.pressure / 100.0);
+        pipeline.println(" hPa");
     }
     else
     {

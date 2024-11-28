@@ -6,11 +6,11 @@
 MFRC522 rfid;
 PipeLine pipeline;
 
-void setup()
+void init()
 {
     Serial.begin(115200);
     pipeline.init(); // Initialisiere die Pipeline
-    setupRFIDRead(); // Initialisiere RFID Reader
+    initRFIDRead();  // Initialisiere RFID Reader
 }
 
 void loop()

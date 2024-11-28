@@ -2,7 +2,6 @@
 #define PHOTORESISTOR_H
 
 #include <Arduino.h>
-#include "Sensors/SenosorData.h"
 #include "pipeline.h"
 
 class PhotoResistor
@@ -13,10 +12,11 @@ private:
     const uint8_t bluePin = 0;
     const uint8_t greenPin = 0;
     const int lightThreshold = 1500;
+    int lux;
 
 public:
-    void setup();
-    void readData(SensorData &data);
+    void init();
+    void readData();
 };
 
 #endif

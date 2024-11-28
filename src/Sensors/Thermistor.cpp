@@ -1,15 +1,12 @@
 #include "Sensors/Thermistor.h"
 
-void Thermistor::setup()
+void Thermistor::init()
 {
   pinMode(thermistorPin, INPUT);
-  pinMode(redPin, OUTPUT);
-  pinMode(bluePin, OUTPUT);
-  pinMode(greenPin, OUTPUT);
-  pipeline.println("Thermistor setup completed.");
+  pipeline.println("Thermistor init completed.");
 }
 
-void Thermistor::readData(SensorData &data)
+void Thermistor::readData()
 {
   int adcValue = analogRead(thermistorPin);
   float resistance = seriesResistor * ((adcMaxValue / (float)adcValue) - 1.0);
@@ -21,8 +18,8 @@ void Thermistor::readData(SensorData &data)
   steinhart = 1.0 / steinhart;                      // Invert
   steinhart -= 273.15;                              // Convert to Celsius
 
-  data.temperature = steinhart; // Update the global SensorData
+  steinhart; // Update the global SensorData
   pipeline.println("Thermistor temperature: ");
-  pipeline.println(String(steinhart).c_str());
+  pipeline.println(steinhart);
   pipeline.println(" °C");
 }

@@ -6,7 +6,9 @@ void MicrophoneSensor::init()
     pipeline.println("Mikrofonverstärker erfolgreich initialisiert.");
 }
 
-void MicrophoneSensor::read(SensorData &data)
+void MicrophoneSensor::read()
 {
-    data.micValue = analogRead(MIC_PIN);
+    micValue = analogRead(MIC_PIN);
+    pipeline.println("Mikrofonwert: ");
+    pipeline.println(micValue);
 }

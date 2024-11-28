@@ -2,16 +2,12 @@
 #define THERMISTOR_H
 
 #include <Arduino.h>
-#include "Sensors/SenosorData.h"
 #include "pipeline.h"
 
 class Thermistor
 {
 private:
     const uint8_t thermistorPin = 35;
-    const uint8_t redPin = 0;
-    const uint8_t bluePin = 0;
-    const uint8_t greenPin = 0;
     const float seriesResistor = 10000.0;    // Widerstandswert in Ohm (10kΩ)
     const float nominalTemperature = 25.0;   // Referenztemperatur (25°C)
     const float nominalResistance = 10000.0; // Nennwiderstand bei Referenztemperatur (10kΩ)
@@ -20,8 +16,8 @@ private:
     const float supplyVoltage = 3.3;         // Versorgungsspannung
 
 public:
-    void setup();
-    void readData(SensorData &data);
+    void init();
+    void readData();
 };
 
 #endif

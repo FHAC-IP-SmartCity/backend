@@ -6,7 +6,7 @@
 class MACReader
 {
 public:
-    void MACsetup()
+    void MACinit()
     {
         WiFi.mode(WIFI_STA);
         pipeline.println("[DEFAULT] ESP32 Board MAC Address: ");

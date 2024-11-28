@@ -16,10 +16,9 @@ void onReceive(const uint8_t *mac, const uint8_t *data, int len)
     slave.send(acknowledgment);
 }
 
-void setup()
+void init()
 {
-    Serial.begin(115200);
-    slave.begin(onReceive);
+    slave.init(onReceive);
 }
 
 void loop()

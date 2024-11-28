@@ -5,7 +5,7 @@ ESPNowDevice::ESPNowDevice(const uint8_t *macAddress)
     memcpy(peerMac, macAddress, 6);
 }
 
-void ESPNowDevice::begin(std::function<void(const uint8_t *, const uint8_t *, int)> callback)
+void ESPNowDevice::init(std::function<void(const uint8_t *, const uint8_t *, int)> callback)
 {
     WiFi.mode(WIFI_STA);
     if (esp_now_init() != ESP_OK)
@@ -19,10 +19,10 @@ void ESPNowDevice::begin(std::function<void(const uint8_t *, const uint8_t *, in
     peerInfo.channel = 0;
     peerInfo.encrypt = false;
 
-    if (esp_now_add_peer(&peerInfo) != ESP_OK)
+    while (esp_now_add_peer(&peerInfo) != ESP_OK)
     {
-        pipeline.println("Failed to add peer.");
-        return;
+        delay(100); // Warten und erneut versuchen
+        pipeline.println("Retrying to add peer...");
     }
 
     onReceiveCallback = callback;

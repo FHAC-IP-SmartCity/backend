@@ -22,17 +22,17 @@ int counter2 = 0;
 // #define FIREBASE_HOST FIREBASE_API_HOST
 // #define FIREBASE_AUTH FIREBASE_API_TOKEN
 
-void setup()
+void init()
 {
   { // PinMode
     pipeline.open();
     Serial.begin(115200);
     // initializeMotionSensors(32, 27, 12, 25, 26, 14);
-    //  setupBusDetector();
-    //  setupPhotoResistor();
-    //  setupThermistor();
-        setupRFIDRead();
-    // setupRFIDWrite();  
+    //  initBusDetector();
+    //  initPhotoResistor();
+    //  initThermistor();
+        initRFIDRead();
+    // initRFIDWrite();  
   }
 
   // { // Wifi-Config

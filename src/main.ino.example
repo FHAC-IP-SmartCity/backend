@@ -20,19 +20,19 @@
 // PhotoResistor photoResistor;
 // MACReader macReader;
 
-void setup()
+void init()
 {
   Serial.begin(115200);
   pipeline.open();
-  setupRFIDRead();
+  initRFIDRead();
 
   // bme680.init();
   // bh1750.init();
   // tcrt5000.init();
   // micSensor.init();
-  // thermistor.setup();
-  // photoResistor.setup();
-  // macReader.MACsetup();
+  // thermistor.init();
+  // photoResistor.init();
+  // macReader.MACinit();
 }
 
 void loop()

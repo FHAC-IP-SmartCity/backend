@@ -16,11 +16,10 @@ void onReceive(const uint8_t *mac, const uint8_t *data, int len)
     pipeline.println((char *)data);
 }
 
-void setup()
+void init()
 {
-    Serial.begin(115200);
-    rfidReader.begin();
-    master.begin(onReceive);
+    rfidReader.init();
+    master.init(onReceive);
 }
 
 void loop()

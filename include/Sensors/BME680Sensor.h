@@ -2,14 +2,13 @@
 #define BME680SENSOR_H
 
 #include <Adafruit_BME680.h>
-#include "Sensors/SenosorData.h"
 #include "pipeline.h"
 
 class BME680Sensor
 {
 public:
     void init();
-    void read(SensorData &data);
+    void read();
 
 private:
     Adafruit_BME680 bme;

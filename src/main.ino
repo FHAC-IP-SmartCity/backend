@@ -21,38 +21,38 @@
 RFIDReader macReader;
 std::string data;
 
-void setup()
+void init()
 {
 
-  pipeline.open();
-  macReader.begin();
+    pipeline.open();
+    macReader.begin();
 
-  // bme680.init();
-  // bh1750.init();
-  // tcrt5000.init();
-  // micSensor.init();
-  // thermistor.setup();
-  // photoResistor.setup();
-  // macReader.MACsetup();
+    // bme680.init();
+    // bh1750.init();
+    // tcrt5000.init();
+    // micSensor.init();
+    // thermistor.init();
+    // photoResistor.init();
+    // macReader.MACinit();
 }
 
 void loop()
 {
-  if (!pipeline.isOpen())
-  {
-    pipeline.open();
-  }
+    if (!pipeline.isOpen())
+    {
+        pipeline.open();
+    }
 
-  macReader.readCard(data);
+    macReader.readCard(data);
 
-  // Daten von den Sensoren auslesen
-  // bme680.read(sensorData);
-  // bh1750.read(sensorData);
-  // tcrt5000.read(sensorData);
-  // micSensor.read(sensorData);
-  // thermistor.readData(sensorData);
-  // photoResistor.readData(sensorData);
+    // Daten von den Sensoren auslesen
+    // bme680.read(sensorData);
+    // bh1750.read(sensorData);
+    // tcrt5000.read(sensorData);
+    // micSensor.read(sensorData);
+    // thermistor.readData(sensorData);
+    // photoResistor.readData(sensorData);
 
-  // macReader.readMACAddress();
-  delay(3000);
+    // macReader.readMACAddress();
+    delay(3000);
 }
