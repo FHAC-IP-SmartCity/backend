@@ -3,6 +3,7 @@
 
 #include <Adafruit_BME680.h>
 #include "Sensors/SenosorData.h"
+#include "pipeline.h"
 
 class BME680Sensor
 {

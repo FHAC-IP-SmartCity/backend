@@ -1,5 +1,7 @@
 #include <WiFi.h>
 #include <esp_wifi.h>
+#include "pipeline.h"
+#include <string>
 
 class MACReader
 {
@@ -7,7 +9,7 @@ public:
     void MACsetup()
     {
         WiFi.mode(WIFI_STA);
-        Serial.print("[DEFAULT] ESP32 Board MAC Address: ");
+        pipeline.println("[DEFAULT] ESP32 Board MAC Address: ");
     }
 
     void readMACAddress()
@@ -16,13 +18,15 @@ public:
         esp_err_t ret = esp_wifi_get_mac(WIFI_IF_STA, baseMac);
         if (ret == ESP_OK)
         {
-            Serial.printf("%02X:%02X:%02X:%02X:%02X:%02X\n",
-                          baseMac[0], baseMac[1], baseMac[2],
-                          baseMac[3], baseMac[4], baseMac[5]);
+            char macStr[18];
+            sprintf(macStr, "%02X:%02X:%02X:%02X:%02X:%02X",
+                    baseMac[0], baseMac[1], baseMac[2],
+                    baseMac[3], baseMac[4], baseMac[5]);
+            pipeline.println(macStr);
         }
         else
         {
-            Serial.println("Failed to read MAC address");
+            pipeline.println("Failed to read MAC address");
         }
     }
 };

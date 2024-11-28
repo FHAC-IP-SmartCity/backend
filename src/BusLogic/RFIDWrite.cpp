@@ -1,4 +1,5 @@
 #include "BusLogic/RFIDWrite.h"
+#include "pipeline.h"
 
 RFIDWrite::RFIDWrite(int ssPin, int rstPin) : rfid(ssPin, rstPin), ssPin(ssPin), rstPin(rstPin) {}
 
@@ -6,7 +7,7 @@ void RFIDWrite::begin()
 {
     SPI.begin();
     rfid.PCD_Init();
-    Serial.println("RFID initialized.");
+    pipeline.println("RFID initialized.");
 }
 
 bool RFIDWrite::writeCard(const std::string &data)
@@ -23,7 +24,7 @@ bool RFIDWrite::writeCard(const std::string &data)
 
     if (rfid.PCD_Authenticate(MFRC522::PICC_CMD_MF_AUTH_KEY_A, sector * 4, &key, &(rfid.uid)) != MFRC522::STATUS_OK)
     {
-        Serial.println("Authentication failed.");
+        pipeline.println("Authentication failed.");
         return false;
     }
 
@@ -33,7 +34,7 @@ bool RFIDWrite::writeCard(const std::string &data)
 
     if (rfid.MIFARE_Write(sector * 4, buffer, 16) != MFRC522::STATUS_OK)
     {
-        Serial.println("Write failed.");
+        pipeline.println("Write failed.");
         return false;
     }
 

@@ -4,6 +4,7 @@
 #include <esp_now.h>
 #include <WiFi.h>
 #include <functional>
+#include "pipeline.h"
 
 class ESPNowDevice
 {

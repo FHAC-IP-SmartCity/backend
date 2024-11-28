@@ -3,6 +3,7 @@
 
 #include <BH1750.h>
 #include "Sensors/SenosorData.h"
+#include "pipeline.h"
 
 class BH1750Sensor
 {

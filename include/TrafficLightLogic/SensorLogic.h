@@ -1,5 +1,6 @@
 #ifndef SENSORLOGIC_H
 #include <Arduino.h>
+#include "pipeline.h"
 
 #define PIR_SENSOR_PIN_1 32 // 15 Pin für den ersten PIR SENSOR
 

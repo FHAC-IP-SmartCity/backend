@@ -3,6 +3,7 @@
 
 #include <SPI.h>
 #include <MFRC522.h>
+#include "pipeline.h"
 
 // Define the pins for the RFID reader
 #define SS_PIN 21  // SDA pin

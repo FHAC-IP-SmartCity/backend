@@ -5,11 +5,11 @@ void BME680Sensor::init()
 {
     if (!bme.begin(SENSOR_ADDRESS))
     {
-        Serial.println("BME680 konnte nicht initialisiert werden.");
+        pipeline.println("BME680 konnte nicht initialisiert werden.");
         while (1)
             ;
     }
-    Serial.println("BME680 erfolgreich initialisiert!");
+    pipeline.println("BME680 erfolgreich initialisiert!");
 }
 
 void BME680Sensor::read(SensorData &data)
@@ -23,6 +23,6 @@ void BME680Sensor::read(SensorData &data)
     }
     else
     {
-        Serial.println("Fehler beim Auslesen des BME680.");
+        pipeline.println("Fehler beim Auslesen des BME680.");
     }
 }

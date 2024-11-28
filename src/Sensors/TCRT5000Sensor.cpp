@@ -3,7 +3,7 @@
 void TCRT5000Sensor::init()
 {
     pinMode(SENSOR_PIN, INPUT);
-    Serial.println("TCRT5000 Infrarotsensor erfolgreich initialisiert.");
+    pipeline.println("TCRT5000 Infrarotsensor erfolgreich initialisiert.");
 }
 
 void TCRT5000Sensor::read(SensorData &data)

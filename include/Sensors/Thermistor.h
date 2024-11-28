@@ -3,6 +3,7 @@
 
 #include <Arduino.h>
 #include "Sensors/SenosorData.h"
+#include "pipeline.h"
 
 class Thermistor
 {

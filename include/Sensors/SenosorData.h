@@ -2,6 +2,7 @@
 #define SENSORDATA_H
 
 #include <Arduino.h>
+#include "pipeline.h"
 
 class SensorData
 {
@@ -17,35 +18,35 @@ public:
 
     void printData()
     {
-        Serial.println("=== Sensorwerte ===");
-        Serial.print("Temperatur: ");
-        Serial.print(temperature);
-        Serial.println(" °C");
+        pipeline.println("=== Sensorwerte ===");
+        pipeline.println("Temperatur: ");
+        pipeline.println(temperature);
+        pipeline.println(" °C");
 
-        Serial.print("Luftfeuchtigkeit: ");
-        Serial.print(humidity);
-        Serial.println(" %");
+        pipeline.println("Luftfeuchtigkeit: ");
+        pipeline.println(humidity);
+        pipeline.println(" %");
 
-        Serial.print("Luftdruck: ");
-        Serial.print(pressure);
-        Serial.println(" hPa");
+        pipeline.println("Luftdruck: ");
+        pipeline.println(pressure);
+        pipeline.println(" hPa");
 
-        Serial.print("Gas-Widerstand: ");
-        Serial.print(gasResistance);
-        Serial.println(" KΩ");
+        pipeline.println("Gas-Widerstand: ");
+        pipeline.println(gasResistance);
+        pipeline.println(" KΩ");
 
-        Serial.print("PIR-Sensor: ");
-        Serial.println(pirState ? "Bewegung erkannt" : "Keine Bewegung");
+        pipeline.println("PIR-Sensor: ");
+        pipeline.println(pirState ? "Bewegung erkannt" : "Keine Bewegung");
 
-        Serial.print("Mikrofonwert: ");
-        Serial.println(micValue);
+        pipeline.println("Mikrofonwert: ");
+        pipeline.println(micValue);
 
-        Serial.print("Lichtstärke: ");
-        Serial.print(lux);
-        Serial.println(" lx");
+        pipeline.println("Lichtstärke: ");
+        pipeline.println(lux);
+        pipeline.println(" lx");
 
-        Serial.print("TCRT5000-Sensorwert: ");
-        Serial.println(tcrtValue);
+        pipeline.println("TCRT5000-Sensorwert: ");
+        pipeline.println(tcrtValue);
     }
 };
 

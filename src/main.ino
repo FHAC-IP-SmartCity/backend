@@ -1,25 +1,58 @@
-#ifndef RFIDWRITE_H
-#define RFIDWRITE_H
+#include <Arduino.h>
 
-#include <SPI.h>
-#include <MFRC522.h>
+// #include "Sensors/BME680Sensor.h"
+// #include "Sensors/BH1750Sensor.h"
+// #include "Sensors/TCRT5000Sensor.h"
+// #include "Sensors/MicrophoneSensor.h"
+// #include "Sensors/PhotoResistor.h"
+// #include "Sensors/Thermistor.h"
 
-class RFIDWrite
+// #include "MACReader.h"
+#include "BusLogic/RFIDReader.h"
+#include "pipeline.h"
+
+// SensorData sensorData;
+// BME680Sensor bme680;
+// BH1750Sensor bh1750;
+// TCRT5000Sensor tcrt5000;
+// MicrophoneSensor micSensor;
+// Thermistor thermistor;
+// PhotoResistor photoResistor;
+RFIDReader macReader;
+std::string data;
+
+void setup()
 {
-<<<<<<< HEAD
+
   pipeline.open();
-  setupRFIDRead();
-=======
-private:
-    MFRC522 rfid;
-    int ssPin;
-    int rstPin;
->>>>>>> 53527ad0972c9167e4b61e117487a664f8b2545f
+  macReader.begin();
 
-public:
-    RFIDWrite(int ssPin, int rstPin);
-    void begin();
-    bool writeCard(const std::string &data);
-};
+  // bme680.init();
+  // bh1750.init();
+  // tcrt5000.init();
+  // micSensor.init();
+  // thermistor.setup();
+  // photoResistor.setup();
+  // macReader.MACsetup();
+}
 
-#endif // RFIDWRITE_H
+void loop()
+{
+  if (!pipeline.isOpen())
+  {
+    pipeline.open();
+  }
+
+  macReader.readCard(data);
+
+  // Daten von den Sensoren auslesen
+  // bme680.read(sensorData);
+  // bh1750.read(sensorData);
+  // tcrt5000.read(sensorData);
+  // micSensor.read(sensorData);
+  // thermistor.readData(sensorData);
+  // photoResistor.readData(sensorData);
+
+  // macReader.readMACAddress();
+  delay(3000);
+}

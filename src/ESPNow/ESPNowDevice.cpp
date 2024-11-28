@@ -10,7 +10,7 @@ void ESPNowDevice::begin(std::function<void(const uint8_t *, const uint8_t *, in
     WiFi.mode(WIFI_STA);
     if (esp_now_init() != ESP_OK)
     {
-        Serial.println("ESP-NOW initialization failed!");
+        pipeline.println("ESP-NOW initialization failed!");
         return;
     }
 
@@ -21,7 +21,7 @@ void ESPNowDevice::begin(std::function<void(const uint8_t *, const uint8_t *, in
 
     if (esp_now_add_peer(&peerInfo) != ESP_OK)
     {
-        Serial.println("Failed to add peer.");
+        pipeline.println("Failed to add peer.");
         return;
     }
 

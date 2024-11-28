@@ -3,7 +3,7 @@
 void MicrophoneSensor::init()
 {
     pinMode(MIC_PIN, INPUT);
-    Serial.println("Mikrofonverstärker erfolgreich initialisiert.");
+    pipeline.println("Mikrofonverstärker erfolgreich initialisiert.");
 }
 
 void MicrophoneSensor::read(SensorData &data)

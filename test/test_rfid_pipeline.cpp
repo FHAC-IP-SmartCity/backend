@@ -15,7 +15,7 @@ void setup()
 
 void loop()
 {
-    Serial.println("Starting test...");
+    pipeline.println("Starting test...");
 
     // Lese Daten von der Karte
     readDataFromCard();

@@ -45,30 +45,30 @@ int handleSensorMotion(int GREEN1)
     {
       // Ampel 1 ist grün und mehr als 7 Sekunden sind vergangen - Zeit verlängern
       switchNum = 1;
-      Serial.println("Extending time");
+      pipeline.println("Extending time");
     }
     else if (((fstTLGreen && !fstTimer) || (!fstTLGreen && fstTimer)) && !sndMotionDetected)
     {
       // Ampel 1 ist grün und weniger als 7 Sekunden sind vergangen - Keine Aktion erforderlich
       switchNum = 2;
-      Serial.println("Ignoring motion");
+      pipeline.println("Ignoring motion");
     }
     else if (!fstTLGreen && !fstTimer && !sndMotionDetected)
     {
       // Ampel 2 ist grün und weniger als 7 Sekunden sind vergangen - Switch lights
       switchNum = 3;
-      Serial.println("Switch lights");
+      pipeline.println("Switch lights");
     }
     else
     {
       // Standardfall: Falls keine der obigen Bedingungen zutrifft
       switchNum = 0;
-      Serial.println("Default case");
+      pipeline.println("Default case");
     }
 
     fstMotionDetected = false;
-    Serial.print("Switch Number: ");
-    Serial.println(switchNum);
+    pipeline.println("Switch Number: ");
+    pipeline.println(String(switchNum).c_str());
     return switchNum;
   }
 

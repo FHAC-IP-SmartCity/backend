@@ -30,6 +30,11 @@ public:
     // will use the proto console
     void println(const char *value);
 
+    // Print info to the proto or serial console.
+    // If a connection is open, PipeLine::println()
+    // will use the proto console
+    void println(int64_t value);
+
     // Check if proto is still listening
     // Takes longer than isOpen() due to RTT
     bool ping(uint8_t timeout = 50);

@@ -6,7 +6,7 @@ void Thermistor::setup()
   pinMode(redPin, OUTPUT);
   pinMode(bluePin, OUTPUT);
   pinMode(greenPin, OUTPUT);
-  Serial.println("Thermistor setup completed.");
+  pipeline.println("Thermistor setup completed.");
 }
 
 void Thermistor::readData(SensorData &data)
@@ -22,7 +22,7 @@ void Thermistor::readData(SensorData &data)
   steinhart -= 273.15;                              // Convert to Celsius
 
   data.temperature = steinhart; // Update the global SensorData
-  Serial.print("Thermistor temperature: ");
-  Serial.print(steinhart);
-  Serial.println(" °C");
+  pipeline.println("Thermistor temperature: ");
+  pipeline.println(String(steinhart).c_str());
+  pipeline.println(" °C");
 }

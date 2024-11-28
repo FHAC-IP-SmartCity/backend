@@ -3,6 +3,7 @@
 
 #include <SPI.h>
 #include <MFRC522.h>
+#include "pipeline.h"
 
 class RFIDReader
 {
