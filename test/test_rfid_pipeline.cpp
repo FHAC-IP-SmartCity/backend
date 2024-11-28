@@ -6,7 +6,6 @@
 MFRC522 rfid;
 // TODO: Replace with actual RFIDReader pins
 RFIDReader rfidReader(21, 22);
-PipeLine pipeline;
 
 void init()
 {
