@@ -14,15 +14,13 @@ void BH1750Sensor::init()
 
 void BH1750Sensor::read()
 {
-    float lux = lightMeter.readLightLevel();
+    lux = lightMeter.readLightLevel();
     if (lux == -1)
     {
         pipeline.println("Fehler beim Auslesen des BH1750.");
-        }
+    }
     else
     {
-        pipeline.println("Lichtstärke: ");
-        pipeline.println(lux);
-        pipeline.println(" lx");
+        this->lux = lux;
     }
 }

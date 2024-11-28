@@ -7,16 +7,14 @@
 class PhotoResistor
 {
 private:
-    const uint8_t photoResistorPin = 36;
-    const uint8_t redPin = 0;
-    const uint8_t bluePin = 0;
-    const uint8_t greenPin = 0;
     const int lightThreshold = 1500;
     int lux;
+    uint8_t pin;
 
 public:
-    void init();
+    void init(uint8_t pin = 36);
     void readData();
+    int getLux() { return lux; }
 };
 
 #endif

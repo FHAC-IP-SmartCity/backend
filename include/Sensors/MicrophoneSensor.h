@@ -7,12 +7,13 @@
 class MicrophoneSensor
 {
 public:
-    void init();
+    void init(uint8_t micPin = 35);
     void read();
+    uint16_t getValue() { return micValue; }
 
 private:
-    const uint8_t MIC_PIN = 35; // ADC-Pin für das Mikrofon
     uint16_t micValue;
+    uint8_t micPin;
 };
 
 #endif

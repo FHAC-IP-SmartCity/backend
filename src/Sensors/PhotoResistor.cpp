@@ -1,14 +1,15 @@
 #include "Sensors/PhotoResistor.h"
 
-void PhotoResistor::init()
+void PhotoResistor::init(uint8_t pin)
 {
-  pinMode(photoResistorPin, INPUT);
+  this->pin = pin;
+  pinMode(pin, INPUT);
   pipeline.println("PhotoResistor init completed.");
 }
 
 void PhotoResistor::readData()
 {
-  int lightLevel = analogRead(photoResistorPin);
+  int lightLevel = analogRead(pin);
   lux = lightLevel; // Update the global SensorData
 
   pipeline.println("Light level: ");

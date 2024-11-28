@@ -1,9 +1,9 @@
 #include "Sensors/BME680Sensor.h"
 #include <Wire.h>
 
-void BME680Sensor::init()
+void BME680Sensor::init(uint8_t address)
 {
-    if (!bme.begin(SENSOR_ADDRESS))
+    if (!bme.begin(address))
     {
         pipeline.println("BME680 konnte nicht initialisiert werden.");
         while (1)
@@ -16,13 +16,10 @@ void BME680Sensor::read()
 {
     if (bme.performReading())
     {
-        pipeline.println("Temperatur: ");
-        pipeline.println(bme.temperature);
-        pipeline.println(" °C, Luftfeuchtigkeit: ");
-        pipeline.println(bme.humidity);
-        pipeline.println(" %, Luftdruck: ");
-        pipeline.println(bme.pressure / 100.0);
-        pipeline.println(" hPa");
+        temperature = bme.temperature;
+        humidity = bme.humidity;
+        pressure = bme.pressure;
+        gas_resistance = bme.gas_resistance;
     }
     else
     {

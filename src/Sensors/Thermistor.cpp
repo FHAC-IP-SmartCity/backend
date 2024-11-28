@@ -1,8 +1,9 @@
 #include "Sensors/Thermistor.h"
 
-void Thermistor::init()
+void Thermistor::init(uint8_t pin)
 {
-  pinMode(thermistorPin, INPUT);
+  this->pin = pin;
+  pinMode(pin, INPUT);
   pipeline.println("Thermistor init completed.");
 }
 
@@ -18,8 +19,5 @@ void Thermistor::readData()
   steinhart = 1.0 / steinhart;                      // Invert
   steinhart -= 273.15;                              // Convert to Celsius
 
-  steinhart; // Update the global SensorData
-  pipeline.println("Thermistor temperature: ");
-  pipeline.println(steinhart);
-  pipeline.println(" °C");
+  this->steinhart = steinhart;
 }

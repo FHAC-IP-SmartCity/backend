@@ -14,10 +14,14 @@ private:
     const float bCoefficient = 3950.0;       // B-Koeffizient des Thermistors
     const float adcMaxValue = 4095.0;        // Maximaler ADC-Wert für 12-Bit-Auflösung
     const float supplyVoltage = 3.3;         // Versorgungsspannung
+    float steinhart;
 
 public:
-    void init();
+    void init(uint8_t pin);
     void readData();
+    float getTemperature() { return steinhart; }
+
+    uint8_t pin;
 };
 
 #endif

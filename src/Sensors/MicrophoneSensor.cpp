@@ -1,14 +1,13 @@
 #include "Sensors/MicrophoneSensor.h"
 
-void MicrophoneSensor::init()
+void MicrophoneSensor::init(uint8_t micPin)
 {
-    pinMode(MIC_PIN, INPUT);
+    this->micPin = micPin;
+    pinMode(micPin, INPUT);
     pipeline.println("Mikrofonverstärker erfolgreich initialisiert.");
 }
 
 void MicrophoneSensor::read()
 {
-    micValue = analogRead(MIC_PIN);
-    pipeline.println("Mikrofonwert: ");
-    pipeline.println(micValue);
+    micValue = analogRead(micPin);
 }
