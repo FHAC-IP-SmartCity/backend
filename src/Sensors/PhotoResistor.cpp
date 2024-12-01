@@ -12,9 +12,6 @@ void PhotoResistor::readData()
   int lightLevel = analogRead(pin);
   lux = lightLevel; // Update the global SensorData
 
-  pipeline.println("Light level: ");
-  pipeline.println(lightLevel);
-
   // Logic to handle light threshold
   if (lightLevel < lightThreshold)
   {

@@ -10,6 +10,4 @@ void TCRT5000Sensor::init(uint8_t pin)
 void TCRT5000Sensor::read()
 {
     tcrtValue = analogRead(pin);
-    pipeline.println("TCRT5000 Infrarotsensorwert: ");
-    pipeline.println(tcrtValue);
 }

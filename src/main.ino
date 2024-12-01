@@ -1,35 +1,24 @@
 #include <Arduino.h>
 
-// #include "Sensors/BME680Sensor.h"
-// #include "Sensors/BH1750Sensor.h"
-// #include "Sensors/TCRT5000Sensor.h"
+#include "Sensors/TCRT5000Sensor.h"
 // #include "Sensors/MicrophoneSensor.h"
 // #include "Sensors/PhotoResistor.h"
 // #include "Sensors/Thermistor.h"
 
 // #include "MACReader.h"
-#include "BusLogic/RFIDReader.h"
 #include "pipeline.h"
-
-// SensorData sensorData;
-// BME680Sensor bme680;
-// BH1750Sensor bh1750;
-// TCRT5000Sensor tcrt5000;
+TCRT5000Sensor TCRT;
 // MicrophoneSensor micSensor;
 // Thermistor thermistor;
 // PhotoResistor photoResistor;
-RFIDReader rfid(21, 22);
-std::string data;
+
+int TCRTVal = 0;
 
 void setup()
 {
-
     pipeline.open();
-    rfid.init();
+    TCRT.init();
 
-    // bme680.init();
-    // bh1750.init();
-    // tcrt5000.init();
     // micSensor.init();
     // thermistor.init();
     // photoResistor.init();
@@ -38,12 +27,13 @@ void setup()
 
 void loop()
 {
-    if (!pipeline.isOpen())
-    {
-        pipeline.open();
-    }
+    TCRT.read();
 
-    rfid.readCard();
+    // Daten aus dem Buffer holen
+    TCRTVal = TCRT.getTCRTValue();
+    // Daten an den Server senden, wenn Daten vorhanden sind
+    // float to double
+    pipeline.println(static_cast<double>(TCRTVal));
 
     // Daten von den Sensoren auslesen
     // bme680.read(sensorData);
@@ -54,5 +44,7 @@ void loop()
     // photoResistor.readData(sensorData);
 
     // macReader.readMACAddress();
+
+    // Buffer leeren, nach einmaliger Ausgabe
     delay(3000);
 }

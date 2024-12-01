@@ -21,7 +21,7 @@ private:
     // Hilfsmethode für das Lesen von Daten
     void logError(const String &msg)
     {
-        pipeline.send(1, msg.c_str(), msg.length());
+        pipeline.send(1000, msg.c_str(), msg.length());
     }
 
 public:
