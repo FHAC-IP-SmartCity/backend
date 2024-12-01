@@ -38,7 +38,21 @@ void ESPNowSlave::onReceiveStatic(const uint8_t *mac, const uint8_t *data, int l
     // Send the received data using the pipeline
     std::string message = std::string("Received data: ") + std::string((char *)data, len);
     // TODO: Send the message using the pipeline to frontend
-    pipeline.println(message.c_str());
+
+    // Split the message into two parts
+    std::string delimiter = "ID: ";
+    size_t pos = message.find(delimiter);
+    if (pos != std::string::npos)
+    {
+        std::string data = message.substr(0, pos);
+        std::string id = message.substr(pos + delimiter.length());
+        pipeline.println((data).c_str());
+        pipeline.println(("ID: " + id).c_str());
+    }
+    else
+    {
+        pipeline.println("ID not found in the message.");
+    }
 }
 
 // Nicht-statische Methode für die eigentliche Verarbeitung

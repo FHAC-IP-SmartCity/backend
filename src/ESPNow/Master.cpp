@@ -20,7 +20,7 @@ void ESPNowMaster::loop()
         cardData = (char *)rfidReader.getBuffer(); // RFID-Daten abrufen
         pipeline.println(("Gelesene Daten: " + cardData).c_str());
 
-        if (device.send(cardData)) // Daten senden
+        if (device.send((cardData + "ID: 1002").c_str())) // Daten senden
         {
             pipeline.println("Master: Daten erfolgreich gesendet.");
         }
