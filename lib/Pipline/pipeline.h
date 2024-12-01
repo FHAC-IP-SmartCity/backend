@@ -40,6 +40,10 @@ public:
     // will use the proto console
     void println(double value);
 
+    void print(const char *value);
+    void print(int64_t value);
+    void print(double value);
+
     // Check if proto is still listening
     // Takes longer than isOpen() due to RTT
     bool ping(uint8_t timeout = 50);

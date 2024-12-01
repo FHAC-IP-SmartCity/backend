@@ -6,13 +6,13 @@
 class MACReader
 {
 public:
-    void MACinit()
+    void init()
     {
         WiFi.mode(WIFI_STA);
         pipeline.println("[DEFAULT] ESP32 Board MAC Address: ");
     }
 
-    void readMACAddress()
+    void read()
     {
         uint8_t baseMac[6];
         esp_err_t ret = esp_wifi_get_mac(WIFI_IF_STA, baseMac);

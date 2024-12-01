@@ -1,44 +1,39 @@
-#include <Arduino.h>
-#include "ESPNow/ESPNowDevice.h"
-#include "BusLogic/RFIDReader.h"
-#include "pipeline.h"
-#include <string.h>
+#include "ESPNow/Master.h"
 
-// MAC-Adresse des Slaves
-uint8_t slaveMac[] = {0xA0, 0xB7, 0x65, 0x2D, 0x78, 0x3C};
+ESPNowMaster::ESPNowMaster(const uint8_t *slaveMac, int rfidSdaPin, int rfidSclPin)
+    : device(slaveMac), rfidReader(rfidSdaPin, rfidSclPin) {}
 
-RFIDReader rfidReader(21, 22);
-ESPNowDevice master(slaveMac);
-
-void masterOnReceive(const uint8_t *mac, const uint8_t *data, int len)
-{
-    pipeline.println("Quittung empfangen: ");
-    pipeline.println((char *)data);
-}
-
-void masterInit()
+void ESPNowMaster::init()
 {
     rfidReader.init();
-    master.init(masterOnReceive);
+    device.init(onReceive);
+    pipeline.println("Master: Initialisiert.");
 }
 
-void masterLoop()
+void ESPNowMaster::loop()
 {
     std::string cardData;
-    if (rfidReader.readCard(1))
-    {
-        pipeline.println("RFID-Daten gelesen: ");
-        cardData = (char *)rfidReader.getBuffer();
-        pipeline.println(cardData.c_str());
 
-        if (master.send(cardData))
+    if (rfidReader.readCard(1)) // RFID-Karte erkannt
+    {
+        pipeline.println("Master: RFID-Daten gelesen.");
+        cardData = (char *)rfidReader.getBuffer(); // RFID-Daten abrufen
+        pipeline.println(("Gelesene Daten: " + cardData).c_str());
+
+        if (device.send(cardData)) // Daten senden
         {
-            pipeline.println("Daten erfolgreich gesendet.");
+            pipeline.println("Master: Daten erfolgreich gesendet.");
         }
         else
         {
-            pipeline.println("Fehler beim Senden.");
+            pipeline.println("Master: Fehler beim Senden der Daten.");
         }
     }
     delay(3000);
+}
+
+void ESPNowMaster::onReceive(const uint8_t *mac, const uint8_t *data, int len)
+{
+    pipeline.println("Master: Daten empfangen.");
+    pipeline.println(("Empfangene Daten: " + std::string((char *)data, len)).c_str());
 }

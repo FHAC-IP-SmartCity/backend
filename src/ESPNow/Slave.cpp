@@ -1,27 +1,60 @@
-#include "ESPNow/ESPNowDevice.h"
-#include "pipeline.h"
+#include "ESPNow/Slave.h"
 
-// MAC-Adresse des Masters
-uint8_t masterMac[] = {0xA0, 0xB7, 0x65, 0x2D, 0x5C, 0x2C};
+// Initialisierung des statischen Instanzzeigers
+ESPNowSlave *ESPNowSlave::instance = nullptr;
 
-ESPNowDevice slave(masterMac);
+ESPNowSlave::ESPNowSlave(const uint8_t *masterMac) : device(masterMac) {}
 
-void slaveOnReceive(const uint8_t *mac, const uint8_t *data, int len)
+void ESPNowSlave::init()
 {
-    pipeline.println("Daten empfangen: ");
-    pipeline.println((char *)data);
+    // Instanzzeiger setzen
+    instance = this;
+
+    // Statische Callback-Funktion registrieren
+    device.init(onReceiveStatic);
+    pipeline.println("Slave: Initialisiert.");
+
+    esp_now_register_recv_cb(onReceiveStatic);
+}
+
+void ESPNowSlave::loop()
+{
+
+    delay(1000);
+}
+
+// Statische Callback-Funktion
+void ESPNowSlave::onReceiveStatic(const uint8_t *mac, const uint8_t *data, int len)
+{
+    if (mac == nullptr || data == nullptr || len == 0)
+    {
+        pipeline.println("Received empty data or invalid MAC address.");
+        return;
+    }
+
+    // Process the received data
+    pipeline.println("Data received from master:");
+
+    // Send the received data using the pipeline
+    std::string message = std::string("Received data: ") + std::string((char *)data, len);
+    // TODO: Send the message using the pipeline to frontend
+    pipeline.println(message.c_str());
+}
+
+// Nicht-statische Methode für die eigentliche Verarbeitung
+void ESPNowSlave::onReceive(const uint8_t *mac, const uint8_t *data, int len)
+{
+    pipeline.println("Slave: Daten empfangen.");
+    pipeline.println(("Empfangene Daten: " + std::string((char *)data, len)).c_str());
 
     // Quittung senden
     std::string acknowledgment = "Quittung erhalten";
-    slave.send(acknowledgment);
-}
-
-void slaveInit()
-{
-    slave.init(slaveOnReceive);
-}
-
-void slaveLoop()
-{
-    delay(1000);
+    if (device.send(acknowledgment))
+    {
+        pipeline.println("Slave: Quittung gesendet.");
+    }
+    else
+    {
+        pipeline.println("Slave: Fehler beim Senden der Quittung.");
+    }
 }

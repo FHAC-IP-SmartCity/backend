@@ -99,6 +99,42 @@ void PipeLine::println(double value)
     }
 }
 
+void PipeLine::print(const char *value)
+{
+    if (PipeLine::isOpen())
+    {
+        PipeLine::send(0, value, strlen(value));
+    }
+    else
+    {
+        Serial.print(value);
+    }
+}
+
+void PipeLine::print(int64_t value)
+{
+    if (PipeLine::isOpen())
+    {
+        PipeLine::send(0, value);
+    }
+    else
+    {
+        Serial.print(value);
+    }
+}
+
+void PipeLine::print(double value)
+{
+    if (PipeLine::isOpen())
+    {
+        PipeLine::send(0, value);
+    }
+    else
+    {
+        Serial.print(value);
+    }
+}
+
 bool PipeLine::ping(uint8_t timeout)
 {
     if (!this->isOpen())

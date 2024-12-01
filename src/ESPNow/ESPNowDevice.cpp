@@ -35,6 +35,10 @@ bool ESPNowDevice::send(const std::string &message)
     return result == ESP_OK;
 }
 
+std::string ESPNowDevice::macToString(const uint8_t *mac)
+{
+    return std::string();
+}
 void ESPNowDevice::onReceiveStatic(const uint8_t *mac, const uint8_t *data, int len)
 {
     // Dummy implementation to redirect to the user's callback

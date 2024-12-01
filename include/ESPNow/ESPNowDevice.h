@@ -23,6 +23,7 @@ public:
 
     // send a message to the peer device
     bool send(const std::string &message);
+    std::string macToString(const uint8_t *mac);
 };
 
 #endif
