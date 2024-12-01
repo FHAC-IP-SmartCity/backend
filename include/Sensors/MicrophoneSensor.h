@@ -7,9 +7,9 @@
 class MicrophoneSensor
 {
 public:
-    void init(uint8_t micPin = 35);
+    void init(uint8_t pin = 35);
     void read();
-    uint16_t getValue() { return micValue; }
+    uint16_t getMicValue() { return micValue; }
 
 private:
     uint16_t micValue;

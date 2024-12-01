@@ -7,9 +7,9 @@ void Thermistor::init(uint8_t pin)
   pipeline.println("Thermistor init completed.");
 }
 
-void Thermistor::readData()
+void Thermistor::read()
 {
-  int adcValue = analogRead(thermistorPin);
+  int adcValue = analogRead(pin);
   float resistance = seriesResistor * ((adcMaxValue / (float)adcValue) - 1.0);
   float steinhart;
   steinhart = resistance / nominalResistance;       // R/R0

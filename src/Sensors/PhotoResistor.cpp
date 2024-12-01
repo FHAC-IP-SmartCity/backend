@@ -7,7 +7,7 @@ void PhotoResistor::init(uint8_t pin)
   pipeline.println("PhotoResistor init completed.");
 }
 
-void PhotoResistor::readData()
+void PhotoResistor::read()
 {
   int lightLevel = analogRead(pin);
   lux = lightLevel; // Update the global SensorData

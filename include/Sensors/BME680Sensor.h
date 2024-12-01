@@ -17,7 +17,6 @@ public:
 
 private:
     Adafruit_BME680 bme;
-    const uint8_t SENSOR_ADDRESS = 0x77;
 
     float temperature;
     float humidity;

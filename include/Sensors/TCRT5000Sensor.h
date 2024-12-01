@@ -12,8 +12,8 @@ public:
     int getTCRTValue() { return tcrtValue; }
 
 private:
-    uint8_t pin;
     int tcrtValue;
+    uint8_t pin;
 };
 
 #endif

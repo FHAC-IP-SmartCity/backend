@@ -8,12 +8,12 @@ class BH1750Sensor
 {
 public:
     // TODO: Add parameter
-    void init();
+    void init(uint8_t address = 0x23);
     void read();
     float getLux() { return lux; }
 
 private:
-    // Use the BH1750 library to read the light level
+    // Nutzung des BH1750-Sensors
     BH1750 lightMeter;
     float lux;
 };

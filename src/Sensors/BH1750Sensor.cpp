@@ -1,6 +1,6 @@
 #include "Sensors/BH1750Sensor.h"
 
-void BH1750Sensor::init()
+void BH1750Sensor::init(uint8_t address)
 {
     if (lightMeter.begin())
     {

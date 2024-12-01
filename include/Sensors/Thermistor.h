@@ -7,7 +7,7 @@
 class Thermistor
 {
 private:
-    const uint8_t thermistorPin = 35;
+    uint8_t pin;
     const float seriesResistor = 10000.0;    // Widerstandswert in Ohm (10kΩ)
     const float nominalTemperature = 25.0;   // Referenztemperatur (25°C)
     const float nominalResistance = 10000.0; // Nennwiderstand bei Referenztemperatur (10kΩ)
@@ -17,11 +17,9 @@ private:
     float steinhart;
 
 public:
-    void init(uint8_t pin);
-    void readData();
+    void init(uint8_t pin = 35);
+    void read();
     float getTemperature() { return steinhart; }
-
-    uint8_t pin;
 };
 
 #endif

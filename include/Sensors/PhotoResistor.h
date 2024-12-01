@@ -13,7 +13,7 @@ private:
 
 public:
     void init(uint8_t pin = 36);
-    void readData();
+    void read();
     int getLux() { return lux; }
 };
 
