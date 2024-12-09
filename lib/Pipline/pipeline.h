@@ -2,50 +2,67 @@
 
 #include <Arduino.h>
 
-class PipeLine {
-    private:
-        bool o;
-    public:
-        PipeLine(bool open): o{open} {
-            PipeLine::init();
-        }
+class PipeLine
+{
+private:
+    bool o;
 
-        // Initializes the Pipe with the corresponding baud rate
-        void init();
+public:
+    PipeLine(bool open) : o{open}
+    {
+        PipeLine::init();
+    }
 
-        // Sends a string into pipe
-        void send(uint64_t id, const char* value, size_t size);
+    // Initializes the Pipe with the corresponding baud rate
+    void init();
 
-        // Sends an integer into pipe
-        void send(uint64_t id, int64_t value);
+    // Sends a string into pipe
+    void send(uint64_t id, const char *value, size_t size);
 
-        // Sends a double into pipe
-        void send(uint64_t id, double value);
+    // Sends an integer into pipe
+    void send(uint64_t id, int64_t value);
 
-        // Print info to the proto or serial console.
-        // If a connection is open, PipeLine::println()
-        // will use the proto console
-        void println(const char* value);
+    // Sends a double into pipe
+    void send(uint64_t id, double value);
 
-        // Check if proto is still listening
-        // Takes longer than isOpen() due to RTT
-        bool ping(uint8_t timeout = 50);
+    // Print info to the proto or serial console.
+    // If a connection is open, PipeLine::println()
+    // will use the proto console
+    void println(const char *value);
 
-        // Checks internal state if the pipe is open
-        // It could be, that the proto isn't listening anymore,
-        // to recheck, use PipeLine::ping()
-        bool isOpen();
+    // Print info to the proto or serial console.
+    // If a connection is open, PipeLine::println()
+    // will use the proto console
+    void println(int64_t value);
 
-        // Tries to open a proto session
-        // Returns false if proto is not listening
-        bool tryOpen(uint8_t timeout = 25);
+    // Print info to the proto or serial console.
+    // If a connection is open, PipeLine::println()
+    // will use the proto console
+    void println(double value);
 
-        // Retries until successful to open a proto session
-        void open();
+    void print(const char *value);
+    void print(int64_t value);
+    void print(double value);
 
-        // Closes a proto session
-        // The session can reopen with PipeLine::tryOpen()
-        void close();
+    // Check if proto is still listening
+    // Takes longer than isOpen() due to RTT
+    bool ping(uint8_t timeout = 50);
+
+    // Checks internal state if the pipe is open
+    // It could be, that the proto isn't listening anymore,
+    // to recheck, use PipeLine::ping()
+    bool isOpen();
+
+    // Tries to open a proto session
+    // Returns false if proto is not listening
+    bool tryOpen(uint8_t timeout = 25);
+
+    // Retries until successful to open a proto session
+    void open();
+
+    // Closes a proto session
+    // The session can reopen with PipeLine::tryOpen()
+    void close();
 };
 
 extern PipeLine pipeline;

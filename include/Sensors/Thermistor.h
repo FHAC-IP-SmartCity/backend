@@ -1,20 +1,25 @@
 #ifndef THERMISTOR_H
+#define THERMISTOR_H
+
 #include <Arduino.h>
+#include "pipeline.h"
 
-#define THERMISTOR_PIN 35
-#define RED_PIN_TH 0
-#define BLUE_PIN_TH 0
-#define GREEN_PIN_TH 0
-#define SERIES_RESISTOR 10000  // Widerstandswert in Ohm (10kΩ)
-#define NOMINAL_TEMPERATURE 25  // Referenztemperatur (25°C)
-#define NOMINAL_RESISTANCE 10000  // Nennwiderstand des Thermistors bei Referenztemperatur (10kΩ)
-#define B_COEFFICIENT 3950  // B-Koeffizient des Thermistors
-#define ADC_MAX_VALUE 4095  // Maximaler ADC-Wert für 12-Bit-Auflösung
-#define SUPPLY_VOLTAGE 3.3  // Versorgungsspannung
+class Thermistor
+{
+private:
+    uint8_t pin;
+    const float seriesResistor = 10000.0;    // Widerstandswert in Ohm (10kΩ)
+    const float nominalTemperature = 25.0;   // Referenztemperatur (25°C)
+    const float nominalResistance = 10000.0; // Nennwiderstand bei Referenztemperatur (10kΩ)
+    const float bCoefficient = 3950.0;       // B-Koeffizient des Thermistors
+    const float adcMaxValue = 4095.0;        // Maximaler ADC-Wert für 12-Bit-Auflösung
+    const float supplyVoltage = 3.3;         // Versorgungsspannung
+    float steinhart;
 
-
-//TODO: Automatisieren durch bessere Pinbelegung
-void setupThermistor();
-void thermistorLogic();
+public:
+    void init(uint8_t pin = 35);
+    void read();
+    float getTemperature() { return steinhart; }
+};
 
 #endif
