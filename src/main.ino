@@ -4,12 +4,14 @@
 #include "pipeline.h"
 
 RFIDReader RFID(5, 22);
+const int ledPin = 13;
 std::string data;
 
 void setup()
 {
     // pipeline.open();
     RFID.init();
+    pinMode(ledPin, OUTPUT);
 }
 
 void loop()
@@ -28,9 +30,12 @@ void loop()
     else
     {
         Serial.println(data.c_str());
+        digitalWrite(ledPin, HIGH);
+        delay(1000);
     }
 
     // Buffer leeren, nach einmaliger Ausgabe
     memset(RFID.getBuffer(), 0, sizeof(RFID.getBuffer()));
-    delay(3000);
+    delay(2000);
+    digitalWrite(ledPin, LOW);
 }

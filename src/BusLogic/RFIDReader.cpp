@@ -37,6 +37,16 @@ bool RFIDReader::readCard(uint8_t sector)
     if (!authenticate(sector))
         return false;
 
+    Serial.print("UID tag: ");
+    String content = "";
+    for (byte i = 0; i < rfid.uid.size; i++)
+    {
+        content.concat(String(rfid.uid.uidByte[i] < 0x10 ? " 0" : " "));
+        content.concat(String(rfid.uid.uidByte[i], HEX));
+    }
+    content.toUpperCase();
+    Serial.println(content);
+
     memset(buffer, 0, sizeof(buffer));
 
     byte size = sizeof(buffer);
