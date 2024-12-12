@@ -1,8 +1,8 @@
 #include "Sensors/BH1750Sensor.h"
 
-void BH1750Sensor::init(uint8_t address)
+void BH1750Sensor::init()
 {
-    if (lightMeter.begin())
+    if (lightMeter.begin(BH1750::CONTINUOUS_HIGH_RES_MODE))
     {
         pipeline.println("BH1750 Lichtsensor erfolgreich initialisiert.");
     }

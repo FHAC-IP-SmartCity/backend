@@ -8,7 +8,7 @@ class BH1750Sensor
 {
 public:
     // TODO: Add parameter
-    void init(uint8_t address = 0x23);
+    void init();
     void read();
     float getLux() { return lux; }
 
