@@ -1,13 +1,26 @@
 #include "TrafficLightLogic/SensorLogic.h"
+#include <SPI.h>
+#include <MFRC522.h>
+
+// Pins für RFID
+#define RST_PIN 22
+#define SS_PIN 21
 
 volatile bool fstMotionDetected = false;
-volatile bool sndMotionDetected = false;
 unsigned long currentMillis = 0;
 int TLClock = 20000;
 
-// Initialisiere die Bewegungssensoren
+// RFID-Reader initialisieren
+MFRC522 rfid(SS_PIN, RST_PIN);
+
+// Autorisierte Karten-ID
+const String authorizedCardID = "745acf5b";
+const String authorizedCardID2 = "b0e3f7b1";
+
 void initializeMotionSensors(int PIR, int RED1, int GREEN1, int RED2, int GREEN2, int YELLOW)
 {
+  SPI.begin();
+
   // Config Pins
   pinMode(PIR, INPUT);
   pinMode(RED1, OUTPUT);
@@ -16,66 +29,48 @@ void initializeMotionSensors(int PIR, int RED1, int GREEN1, int RED2, int GREEN2
   pinMode(GREEN2, OUTPUT);
   pinMode(YELLOW, OUTPUT);
 
-  // Config Interrupts
-  attachInterrupt(digitalPinToInterrupt(PIR), pirISR1, RISING);
+  rfid.PCD_Init();
   digitalWrite(RED1, HIGH);
 }
 
-// ISR
-void IRAM_ATTR pirISR1()
-{
-  fstMotionDetected = true;
-}
-
-// hanldes the motion sensor
 int handleSensorMotion(int GREEN1)
 {
-  if (fstMotionDetected)
+  // Prüfen, ob eine Karte erkannt wurde
+  if (rfid.PICC_IsNewCardPresent() && rfid.PICC_ReadCardSerial())
   {
-    int switchNum = 0;
-
-    // Check which traffic light is green
-    bool fstTLGreen = digitalRead(GREEN1) == HIGH;
-
-    // Check if more than 7 seconds have passed
-    // True if more than 7 seconds have passed
-    bool fstTimer = handleTrafficLightsWithMillis() % TLClock >= 15000;
-
-    if (fstTLGreen && fstTimer && !sndMotionDetected)
+    // Karten-ID auslesen
+    String cardID = "";
+    for (byte i = 0; i < rfid.uid.size; i++)
     {
-      // Ampel 1 ist grün und mehr als 7 Sekunden sind vergangen - Zeit verlängern
-      switchNum = 1;
-      pipeline.println("Extending time");
+      cardID += String(rfid.uid.uidByte[i], HEX);
     }
-    else if (((fstTLGreen && !fstTimer) || (!fstTLGreen && fstTimer)) && !sndMotionDetected)
+
+    Serial.println("RFID Card ID: " + cardID);
+
+    // Karten-ID vergleichen
+    if (cardID.equalsIgnoreCase(authorizedCardID) && digitalRead(GREEN1) == HIGH)
     {
-      // Ampel 1 ist grün und weniger als 7 Sekunden sind vergangen - Keine Aktion erforderlich
-      switchNum = 2;
-      pipeline.println("Ignoring motion");
+      Serial.println("Authorized card detected!");
+      return 2; // Ignore the motion sensor
     }
-    else if (!fstTLGreen && !fstTimer && !sndMotionDetected)
+    else if (cardID.equalsIgnoreCase(authorizedCardID) && digitalRead(GREEN1) == LOW)
     {
-      // Ampel 2 ist grün und weniger als 7 Sekunden sind vergangen - Switch lights
-      switchNum = 3;
-      pipeline.println("Switch lights");
+      Serial.println("Authorized card detected!");
+      return 3; // Schalte die Ampel
     }
     else
     {
-      // Standardfall: Falls keine der obigen Bedingungen zutrifft
-      switchNum = 0;
-      pipeline.println("Default case");
+      Serial.println("Unauthorized card detected.");
     }
 
-    fstMotionDetected = false;
-    pipeline.println("Switch Number: ");
-    pipeline.println(String(switchNum).c_str());
-    return switchNum;
+    rfid.PICC_HaltA();
+    rfid.PCD_StopCrypto1();
   }
 
   return 0;
 }
 
-// Behandle die Ampelsteuerung mit Millisekunden
+// Ampelsteuerung mit Millisekunden
 unsigned long handleTrafficLightsWithMillis()
 {
   currentMillis = millis();
@@ -106,7 +101,7 @@ void handleTrafficLights(int switchNum, int RED1, int GREEN1, int RED2, int GREE
   case 2:
     break;
   case 3:
-    // Switch lights
+    // Schalte die Ampel
     digitalWrite(GREEN1, LOW);
     digitalWrite(GREEN2, LOW);
     digitalWrite(YELLOW, HIGH);
@@ -123,7 +118,6 @@ void handleTrafficLights(int switchNum, int RED1, int GREEN1, int RED2, int GREE
   default:
     if (currentMillis - lastSwitchMillis >= 20000)
     {
-      // Default case
       digitalWrite(GREEN1, LOW);
       digitalWrite(GREEN2, LOW);
       digitalWrite(YELLOW, HIGH);
@@ -145,7 +139,7 @@ void handleTrafficLights(int switchNum, int RED1, int GREEN1, int RED2, int GREE
         digitalWrite(RED2, HIGH);
       }
       lastSwitchMillis = currentMillis;
-      break;
     }
+    break;
   }
 }
