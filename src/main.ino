@@ -43,7 +43,7 @@ void setup()
 {
     SPI.begin();
     rfidBus.PCD_Init();
-    Serial.println("Scan PICC to see UID, SAK, type, and data blocks...");
+    pipeline.println("Scan PICC to see UID.");
 
     pinMode(13, OUTPUT);
     pinMode(PIR, INPUT);
@@ -65,27 +65,22 @@ void loop()
             readID[i] = rfidBus.uid.uidByte[i];
         }
 
-        Serial.print("Gelesene Karte: ");
-        for (byte i = 0; i < 7; i++)
-        {
-            Serial.print(readID[i], HEX);
-            Serial.print(" ");
-        }
-        Serial.println();
-
         // Überprüfen, ob die Karte autorisiert ist
         for (int i = 0; i < numIDs; i++)
         {
             if (compareIDs(readID, authorizedIDs[i], 7))
             {
-                Serial.println("Karte autorisiert!");
+                pipeline.println("Karte autorisiert!");
+                // TODO send bool: true to server
                 rfidBus.PICC_HaltA();
                 rfidBus.PCD_StopCrypto1();
                 return;
             }
         }
 
-        Serial.println("Karte nicht autorisiert.");
+        pipeline.println("Karte nicht autorisiert.");
+        // TODO send bool: true to server
+
         rfidBus.PICC_HaltA();
         rfidBus.PCD_StopCrypto1();
     }
@@ -94,7 +89,8 @@ void loop()
     {
         if (!motionDetected)
         {
-            Serial.println("Bewegung erkannt!");
+            pipeline.println("Bewegung erkannt!");
+            // TODO send int: counter to server
             counter++;
             motionDetected = true;
         }
@@ -112,11 +108,14 @@ void loop()
 
     if (fstTrainNum > 2000 && sndTrainNum > 2000)
     {
-        Serial.println("Train in station!");
+        pipeline.println("Train in station!");
+        // TODO send bool1: true to server
+        // TODO send bool2: true to server
     }
     else if (fstTrainNum > 2000)
     {
-        Serial.println("train is comming!");
+        pipeline.println("train is comming!");
+        // TODO send bool1: true to server
     }
 
     digitalWrite(13, LOW);
