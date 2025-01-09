@@ -5,11 +5,11 @@
 
 void setup()
 {
-    initializeMotionSensors(32, 14, 12, 27, 26, 13);
+    initializeTrafficLights(14, 12, 27, 26, 13);
 }
 
 void loop()
 {
-    int switchNum = handleSensorMotion(GREEN_LIGHT_PIN_1);
+    int switchNum = handleSensorMotion(12);
     handleTrafficLights(switchNum, 14, 12, 27, 26, 13);
 }

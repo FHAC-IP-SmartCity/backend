@@ -2,27 +2,27 @@
 #include <SPI.h>
 #include <MFRC522.h>
 
-// Pins für RFID
-#define RST_PIN 22
-#define SS_PIN 21
-
-volatile bool fstMotionDetected = false;
 unsigned long currentMillis = 0;
 int TLClock = 20000;
 
 // RFID-Reader initialisieren
 MFRC522 rfid(SS_PIN, RST_PIN);
 
-// Autorisierte Karten-ID
-const String authorizedCardID = "745acf5b";
-const String authorizedCardID2 = "b0e3f7b1";
+// Autorisierte Karten-IDs
+const byte authorizedIDs[][7] = {
+    {0x4, 0xAD, 0xA1, 0xA5, 0x6E, 0x26, 0x81},
+    {0x4, 0xC9, 0xA7, 0xA5, 0x6E, 0x26, 0x81},
+    {0x4, 0xA6, 0xB2, 0xA5, 0x6E, 0x26, 0x81},
+    {0x4, 0x42, 0x6D, 0xA5, 0x6E, 0x26, 0x81},
+    {0x4, 0x8E, 0x61, 0xA6, 0x6E, 0x26, 0x81}};
 
-void initializeMotionSensors(int PIR, int RED1, int GREEN1, int RED2, int GREEN2, int YELLOW)
+const int numIDs = sizeof(authorizedIDs) / sizeof(authorizedIDs[0]);
+
+void initializeTrafficLights(int RED1, int GREEN1, int RED2, int GREEN2, int YELLOW)
 {
   SPI.begin();
 
-  // Config Pins
-  pinMode(PIR, INPUT);
+  // Pins konfigurieren
   pinMode(RED1, OUTPUT);
   pinMode(GREEN1, OUTPUT);
   pinMode(RED2, OUTPUT);
@@ -30,39 +30,60 @@ void initializeMotionSensors(int PIR, int RED1, int GREEN1, int RED2, int GREEN2
   pinMode(YELLOW, OUTPUT);
 
   rfid.PCD_Init();
-  digitalWrite(RED1, HIGH);
+  digitalWrite(RED1, HIGH); // Initiale Ampelstellung
 }
 
+// Funktion zum Vergleich von Karten-IDs
+bool compareIDs(const byte *id1, const byte *id2, byte length)
+{
+  for (byte i = 0; i < length; i++)
+  {
+    if (id1[i] != id2[i])
+      return false;
+  }
+  return true;
+}
+
+// Funktion zur Verarbeitung von RFID-Karten
 int handleSensorMotion(int GREEN1)
 {
-  // Prüfen, ob eine Karte erkannt wurde
   if (rfid.PICC_IsNewCardPresent() && rfid.PICC_ReadCardSerial())
   {
-    // Karten-ID auslesen
-    String cardID = "";
-    for (byte i = 0; i < rfid.uid.size; i++)
+    byte readID[7] = {0};
+    for (byte i = 0; i < rfid.uid.size && i < 7; i++)
     {
-      cardID += String(rfid.uid.uidByte[i], HEX);
+      readID[i] = rfid.uid.uidByte[i];
     }
 
-    Serial.println("RFID Card ID: " + cardID);
+    Serial.print("Gelesene Karte: ");
+    for (byte i = 0; i < 7; i++)
+    {
+      Serial.print(readID[i], HEX);
+      Serial.print(" ");
+    }
+    Serial.println();
 
-    // Karten-ID vergleichen
-    if (cardID.equalsIgnoreCase(authorizedCardID) && digitalRead(GREEN1) == HIGH)
+    // Überprüfen, ob die Karte autorisiert ist
+    for (int i = 0; i < numIDs; i++)
     {
-      Serial.println("Authorized card detected!");
-      return 2; // Ignore the motion sensor
-    }
-    else if (cardID.equalsIgnoreCase(authorizedCardID) && digitalRead(GREEN1) == LOW)
-    {
-      Serial.println("Authorized card detected!");
-      return 3; // Schalte die Ampel
-    }
-    else
-    {
-      Serial.println("Unauthorized card detected.");
+      if (compareIDs(readID, authorizedIDs[i], 7))
+      {
+        Serial.println("Karte autorisiert!");
+        rfid.PICC_HaltA();
+        rfid.PCD_StopCrypto1();
+
+        if (digitalRead(GREEN1) == HIGH)
+        {
+          return 2; // Ampel 1 ist grün
+        }
+        else
+        {
+          return 3; // Ampel 1 ist rot
+        }
+      }
     }
 
+    Serial.println("Karte nicht autorisiert.");
     rfid.PICC_HaltA();
     rfid.PCD_StopCrypto1();
   }
@@ -89,8 +110,7 @@ void handleTrafficLights(int switchNum, int RED1, int GREEN1, int RED2, int GREE
 
   switch (switchNum)
   {
-  case 1:
-    // Extend time
+  case 1: // Zeit verlängern
     digitalWrite(GREEN1, HIGH);
     digitalWrite(RED1, LOW);
     digitalWrite(GREEN2, LOW);
@@ -100,8 +120,8 @@ void handleTrafficLights(int switchNum, int RED1, int GREEN1, int RED2, int GREE
 
   case 2:
     break;
-  case 3:
-    // Schalte die Ampel
+
+  case 3: // Ampeln umschalten
     digitalWrite(GREEN1, LOW);
     digitalWrite(GREEN2, LOW);
     digitalWrite(YELLOW, HIGH);
