@@ -2,12 +2,14 @@
 #include "MFRC522.h"
 #include "SPI.h"
 #include "Sensors/TCRT5000Sensor.h"
+#include "pipeline.h"
 
 #define SS_PIN 5
 #define RST_PIN 17
 #define PIR 27
 
 int counter = 0;
+bool motionDetected = false;
 
 TCRT5000Sensor fstTrainWest;
 TCRT5000Sensor sndTrainWest;
@@ -90,8 +92,16 @@ void loop()
 
     if (digitalRead(PIR) == HIGH)
     {
-        Serial.println("Bewegung erkannt!");
-        counter++;
+        if (!motionDetected)
+        {
+            Serial.println("Bewegung erkannt!");
+            counter++;
+            motionDetected = true;
+        }
+    }
+    else
+    {
+        motionDetected = false;
     }
 
     fstTrainWest.read();
