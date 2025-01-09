@@ -1,6 +1,8 @@
 #include "TrafficLightLogic/SensorLogic.h"
 #include <SPI.h>
 #include <MFRC522.h>
+#include <Arduino.h>
+#include "pipeline.h"
 
 unsigned long currentMillis = 0;
 int TLClock = 20000;
@@ -22,7 +24,6 @@ void initializeTrafficLights(int RED1, int GREEN1, int RED2, int GREEN2, int YEL
 {
   SPI.begin();
 
-  // Pins konfigurieren
   pinMode(RED1, OUTPUT);
   pinMode(GREEN1, OUTPUT);
   pinMode(RED2, OUTPUT);
@@ -30,7 +31,7 @@ void initializeTrafficLights(int RED1, int GREEN1, int RED2, int GREEN2, int YEL
   pinMode(YELLOW, OUTPUT);
 
   rfid.PCD_Init();
-  digitalWrite(RED1, HIGH); // Initiale Ampelstellung
+  digitalWrite(RED1, HIGH);
 }
 
 // Funktion zum Vergleich von Karten-IDs
@@ -55,35 +56,30 @@ int handleSensorMotion(int GREEN1)
       readID[i] = rfid.uid.uidByte[i];
     }
 
-    Serial.print("Gelesene Karte: ");
-    for (byte i = 0; i < 7; i++)
-    {
-      Serial.print(readID[i], HEX);
-      Serial.print(" ");
-    }
-    Serial.println();
-
     // Überprüfen, ob die Karte autorisiert ist
     for (int i = 0; i < numIDs; i++)
     {
       if (compareIDs(readID, authorizedIDs[i], 7))
       {
-        Serial.println("Karte autorisiert!");
+        pipeline.println("Karte autorisiert.");
+
         rfid.PICC_HaltA();
         rfid.PCD_StopCrypto1();
 
         if (digitalRead(GREEN1) == HIGH)
         {
+          // TODO: Add send int to frontend
           return 2; // Ampel 1 ist grün
         }
         else
         {
+          // TODO: Add send int to frontend
           return 3; // Ampel 1 ist rot
         }
       }
     }
 
-    Serial.println("Karte nicht autorisiert.");
+    pipeline.println("Karte nicht autorisiert.");
     rfid.PICC_HaltA();
     rfid.PCD_StopCrypto1();
   }
@@ -138,6 +134,7 @@ void handleTrafficLights(int switchNum, int RED1, int GREEN1, int RED2, int GREE
   default:
     if (currentMillis - lastSwitchMillis >= 20000)
     {
+      // TODO: Add send int to frontend
       digitalWrite(GREEN1, LOW);
       digitalWrite(GREEN2, LOW);
       digitalWrite(YELLOW, HIGH);
