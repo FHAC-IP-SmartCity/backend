@@ -1,0 +1,43 @@
+1. Controller:
+- RFID - Bus detection
+- TCRT - Train detection west station
+- PIR - Counter
+
+
+RFID
+1. Bus drives above CardReader
+2. Bus is on busstation
+
+TCRT
+1. Train drives into station (west)
+2. Train is in station (west)
+
+PIR
+1. Car is driving
+2. Car count
+
+Pins:
+RFID
+GND - GND
+VCC - VCC
+RST - 17
+MISO - 19 MISO
+MOSI - 23 MOSI
+SCK - 18 SCK
+SS - 5
+
+StatusLED
+Pin - 13
+
+TCRT
+fst - 12
+snd - 14
+
+fstJumper sndJumper lamp
+black = yellow = black1 lamp
+gold = purple = black2 lamp
+white = blue = blue1 lamp
+gray = green = blue2 lamp
+
+PIR
+Pin - 27

@@ -4,8 +4,9 @@
 
 #define SS_PIN 5
 #define RST_PIN 17
+#define PIR 27
 
-MFRC522 rfid(SS_PIN, RST_PIN);
+MFRC522 rfidBus(SS_PIN, RST_PIN);
 
 const byte authorizedIDs[][7] = {
     {0x4, 0xAD, 0xA1, 0xA5, 0x6E, 0x26, 0x81},
@@ -30,18 +31,24 @@ bool compareIDs(const byte *id1, const byte *id2, byte length)
 void setup()
 {
     SPI.begin();
-    rfid.PCD_Init();
+    rfidBus.PCD_Init();
     Serial.println("Scan PICC to see UID, SAK, type, and data blocks...");
+
+    pinMode(13, OUTPUT);
+    pinMode(PIR, INPUT);
 }
 
 void loop()
 {
-    if (rfid.PICC_IsNewCardPresent() && rfid.PICC_ReadCardSerial())
+    if (rfidBus.PICC_IsNewCardPresent() && rfidBus.PICC_ReadCardSerial())
     {
+
+        digitalWrite(13, HIGH);
+
         byte readID[7] = {0};
-        for (byte i = 0; i < rfid.uid.size && i < 7; i++)
+        for (byte i = 0; i < rfidBus.uid.size && i < 7; i++)
         {
-            readID[i] = rfid.uid.uidByte[i];
+            readID[i] = rfidBus.uid.uidByte[i];
         }
 
         Serial.print("Gelesene Karte: ");
@@ -58,14 +65,22 @@ void loop()
             if (compareIDs(readID, authorizedIDs[i], 7))
             {
                 Serial.println("Karte autorisiert!");
-                rfid.PICC_HaltA();
-                rfid.PCD_StopCrypto1();
+                rfidBus.PICC_HaltA();
+                rfidBus.PCD_StopCrypto1();
                 return;
             }
         }
 
         Serial.println("Karte nicht autorisiert.");
-        rfid.PICC_HaltA();
-        rfid.PCD_StopCrypto1();
+        rfidBus.PICC_HaltA();
+        rfidBus.PCD_StopCrypto1();
     }
+
+    if (digitalRead(PIR) == HIGH)
+    {
+        Serial.println("Bewegung erkannt!");
+    }
+
+        digitalWrite(13, LOW);
+    delay(100);
 }
