@@ -1,15 +1,19 @@
 #include <Arduino.h>
 #include "MFRC522.h"
 #include "SPI.h"
-#include "TrafficLightLogic/SensorLogic.h"
+
+#define SS_PIN 5
+#define RST_PIN 17
+
+MFRC522 mfrc522(SS_PIN, RST_PIN);
 
 void setup()
 {
-    initializeMotionSensors(32, 14, 12, 27, 26, 13);
+    SPI.begin();
+    mfrc522.PCD_Init();
+    Serial.println("Scan PICC to see UID, SAK, type, and data blocks...");
 }
 
 void loop()
 {
-    int switchNum = handleSensorMotion(GREEN_LIGHT_PIN_1);
-    handleTrafficLights(switchNum, 14, 12, 27, 26, 13);
 }
