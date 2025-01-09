@@ -1,0 +1,29 @@
+2. Controller
+- TRCT - Parking slots and Train detection
+- PIR - Light on Park
+
+TRCT - Parking and Train
+1. Track if something is above the TRCT
+
+PIR - Light on Park
+1. If a motion is detected, turn lights on
+
+Pins:
+TRCT - Train
+GND - GND
+VIN - VIN
+fst - 12
+snd - 14
+
+TRCT - Parking
+fst - 27 orange
+snd - 26 red
+trd - 25 yellow
+
+___
+PIR
+pin - 13 gray
+
+LED
+Light - 17 orange
+
