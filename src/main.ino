@@ -12,6 +12,9 @@ int counter = 0;
 TCRT5000Sensor fstTrainWest;
 TCRT5000Sensor sndTrainWest;
 
+int fstTrainNum = 0;
+int sndTrainNum = 0;
+
 MFRC522 rfidBus(SS_PIN, RST_PIN);
 
 const byte authorizedIDs[][7] = {
@@ -88,10 +91,23 @@ void loop()
     if (digitalRead(PIR) == HIGH)
     {
         Serial.println("Bewegung erkannt!");
+        counter++;
     }
 
     fstTrainWest.read();
     sndTrainWest.read();
+
+    int fstTrainNum = fstTrainWest.getTCRTValue();
+    int sndTrainNum = sndTrainWest.getTCRTValue();
+
+    if (fstTrainNum > 2000 && sndTrainNum > 2000)
+    {
+        Serial.println("Train in station!");
+    }
+    else if (fstTrainNum > 2000)
+    {
+        Serial.println("train is comming!");
+    }
 
     digitalWrite(13, LOW);
     delay(100);
