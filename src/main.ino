@@ -1,10 +1,16 @@
 #include <Arduino.h>
 #include "MFRC522.h"
 #include "SPI.h"
+#include "Sensors/TCRT5000Sensor.h"
 
 #define SS_PIN 5
 #define RST_PIN 17
 #define PIR 27
+
+int counter = 0;
+
+TCRT5000Sensor fstTrainWest;
+TCRT5000Sensor sndTrainWest;
 
 MFRC522 rfidBus(SS_PIN, RST_PIN);
 
@@ -36,6 +42,9 @@ void setup()
 
     pinMode(13, OUTPUT);
     pinMode(PIR, INPUT);
+
+    fstTrainWest.init(12);
+    sndTrainWest.init(14);
 }
 
 void loop()
@@ -81,6 +90,9 @@ void loop()
         Serial.println("Bewegung erkannt!");
     }
 
-        digitalWrite(13, LOW);
+    fstTrainWest.read();
+    sndTrainWest.read();
+
+    digitalWrite(13, LOW);
     delay(100);
 }
