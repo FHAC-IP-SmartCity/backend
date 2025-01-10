@@ -7,9 +7,17 @@
 class TCRT5000Sensor
 {
 public:
-    void init(uint8_t pin = 32);
+    void init(uint8_t pin);
     void read();
-    int getTCRTValue() { return tcrtValue; }
+    int getTCRTValue()
+    {
+        if (tcrtValue >= 4095)
+        {
+            tcrtValue = 3000;
+        }
+
+        return tcrtValue;
+    }
 
 private:
     int tcrtValue;

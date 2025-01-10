@@ -31,33 +31,32 @@ void setup()
 void loop()
 {
     fstTrain.read();
-    sndTrain.read();
-    fstPark.read();
-    sndPark.read();
-    trdPark.read();
-
     fstTrainNum = fstTrain.getTCRTValue();
+    sndTrain.read();
     sndTrainNum = sndTrain.getTCRTValue();
+    fstPark.read();
     fstParkNum = fstPark.getTCRTValue();
+    sndPark.read();
     sndParkNum = sndPark.getTCRTValue();
+    trdPark.read();
     trdParkNum = trdPark.getTCRTValue();
 
-    if (fstTrainNum > 2000 && sndTrainNum > 2000)
+    if (fstTrainNum >= 1 && sndTrainNum >= 1)
     {
-        pipeline.println("All trains are in the station");
+        Serial.println("All trains are in the station");
         // TODO send bool1: true to server
         // TODO send bool2: true to server
     }
-    else if (sndTrainNum > 2000)
+    else if (sndTrainNum >= 1)
     {
-        pipeline.println("Train driving in the station");
+        Serial.println("Train driving in the station");
         // TODO send bool: true to server
     }
 
     if (digitalRead(pirPin) == HIGH)
     {
         digitalWrite(ledPin, HIGH);
-        pipeline.println("Motion detected");
+        Serial.println("Motion detected");
         // TODO send bool: true to server
     }
     else
@@ -66,7 +65,7 @@ void loop()
         // TODO send bool: false to server
     }
 
-    if (fstParkNum > 2000)
+    if (fstParkNum >= 1)
     {
         pipeline.println("First parking spot is occupied");
         // TODO send bool: true to server
@@ -75,7 +74,7 @@ void loop()
     {
         // TODO send bool: false to server
     }
-    if (sndParkNum > 2000)
+    if (sndParkNum >= 1)
     {
         pipeline.println("Second parking spot is occupied");
         // TODO send bool: true to server
@@ -84,7 +83,7 @@ void loop()
     {
         // TODO send bool: false to server
     }
-    if (trdParkNum > 2000)
+    if (trdParkNum >= 1)
     {
         pipeline.println("Third parking spot is occupied");
         // TODO send bool: true to server
@@ -93,6 +92,21 @@ void loop()
     {
         // TODO send bool: false to server
     }
+
+    Serial.print("Train1: ");
+    Serial.println(fstTrainNum);
+
+    Serial.print("Train2: ");
+    Serial.println(sndTrainNum);
+
+    Serial.print("Park1: ");
+    Serial.println(fstParkNum);
+
+    Serial.print("Park2: ");
+    Serial.println(sndParkNum);
+
+    Serial.print("Park3: ");
+    Serial.println(trdParkNum);
 
     delay(1000);
 }
