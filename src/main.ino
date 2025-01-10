@@ -91,6 +91,7 @@ void loop()
         {
             pipeline.println("Bewegung erkannt!");
             // TODO send int: counter to server
+            pipeline.println(static_cast<int64_t>(counter));
             counter++;
             motionDetected = true;
         }
@@ -106,16 +107,21 @@ void loop()
     int fstTrainNum = fstTrainWest.getTCRTValue();
     int sndTrainNum = sndTrainWest.getTCRTValue();
 
+    Serial.println(fstTrainNum);
+    Serial.println(sndTrainNum);
+
     if (fstTrainNum > 2000 && sndTrainNum > 2000)
     {
-        pipeline.println("Train in station!");
+        pipeline.println(static_cast<int64_t>(fstTrainNum));
+        pipeline.println(static_cast<int64_t>(sndTrainNum));
         // TODO send bool1: true to server
         // TODO send bool2: true to server
     }
     else if (fstTrainNum > 2000)
     {
-        pipeline.println("train is comming!");
+        pipeline.println(static_cast<int64_t>(fstTrainNum));
         // TODO send bool1: true to server
+        // if (fst...) send id and num 1
     }
 
     digitalWrite(13, LOW);
