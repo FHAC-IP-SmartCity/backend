@@ -1,6 +1,3 @@
-#include <Arduino.h>
-#include "MFRC522.h"
-#include "SPI.h"
 #include "TrafficLightLogic/SensorLogic.h"
 
 // Autorisierte Karten-IDs
@@ -15,6 +12,7 @@ int TLClock = 20000;
 
 void setup()
 {
+    pipeline.open();
     initializeTrafficLights(14, 12, 27, 26, 13);
 }
 

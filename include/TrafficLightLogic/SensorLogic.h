@@ -1,7 +1,8 @@
 #ifndef SENSORLOGIC_H
 #include <Arduino.h>
-#include "SPI.h"
 #include "MFRC522.h"
+#include "SPI.h"
+
 #include "pipeline.h"
 
 #define RST_PIN 17

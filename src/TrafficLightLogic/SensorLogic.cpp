@@ -39,15 +39,14 @@ int authorizeRfidCard(int GREEN1, const byte authorizedIDs[][7])
     {
       if (compareIDs(readID, authorizedIDs[i], 7))
       {
-        pipeline.println("Karte autorisiert.");
+        pipeline.println("Priority card detected.");
 
         rfid.PICC_HaltA();
         rfid.PCD_StopCrypto1();
 
         if (digitalRead(GREEN1) == HIGH) // Traffic light is green
         {
-          // TODO: Add send int to frontend
-          // pipeline.send(1100, static_cast<int64_t>(2));
+          pipeline.send(1100, static_cast<int64_t>(2));
           return 2;
 
           // TODO: Could be 1 as well
@@ -56,14 +55,13 @@ int authorizeRfidCard(int GREEN1, const byte authorizedIDs[][7])
         }
         else // Traffic light is red
         {
-          // TODO: Add send int to frontend
-          // pipeline.send(1100, static_cast<int64_t>(3));
+          pipeline.send(1100, static_cast<int64_t>(3));
           return 3;
         }
       }
     }
 
-    pipeline.println("Karte nicht autorisiert.");
+    pipeline.println("No prioritiy card detected.");
     rfid.PICC_HaltA();
     rfid.PCD_StopCrypto1();
   }
@@ -107,7 +105,8 @@ void handleTrafficLights(int switchNum, int TLClock, int RED1, int GREEN1, int R
   default: // Switch traffic light after TLClock
     if (currentMillis - lastSwitchMillis >= TLClock)
     {
-      // TODO: Add send int to frontend
+      pipeline.send(1100, static_cast<int64_t>(4));
+
       digitalWrite(GREEN1, LOW);
       digitalWrite(GREEN2, LOW);
       digitalWrite(YELLOW, HIGH);
@@ -130,8 +129,6 @@ void handleTrafficLights(int switchNum, int TLClock, int RED1, int GREEN1, int R
       }
       lastSwitchMillis = currentMillis;
     }
-
-    // pipeline.send(1100, static_cast<int64_t>(4));
     break;
   }
 }
