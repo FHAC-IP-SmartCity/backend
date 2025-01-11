@@ -3,7 +3,6 @@
 #include "SPI.h"
 
 #include "Sensors/TCRT5000.h"
-#include "pipeline.h"
 
 #define SS_PIN 5
 #define RST_PIN 17
