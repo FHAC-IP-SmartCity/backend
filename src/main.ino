@@ -11,6 +11,8 @@ const byte authorizedIDs[][7] = {
     {0x4, 0x42, 0x6D, 0xA5, 0x6E, 0x26, 0x81},
     {0x4, 0x8E, 0x61, 0xA6, 0x6E, 0x26, 0x81}};
 
+int TLClock = 20000;
+
 void setup()
 {
     initializeTrafficLights(14, 12, 27, 26, 13);
@@ -18,6 +20,6 @@ void setup()
 
 void loop()
 {
-    int switchNum = handleSensorMotion(12, authorizedIDs);
-    handleTrafficLights(switchNum, 14, 12, 27, 26, 13);
+    int switchNum = authorizeRfidCard(12, authorizedIDs);
+    handleTrafficLights(switchNum, TLClock, 14, 12, 27, 26, 13);
 }

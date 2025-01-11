@@ -80,19 +80,8 @@ int handleSensorMotion(int GREEN1, const byte authorizedIDs[][7])
   return 0;
 }
 
-// Ampelsteuerung mit Millisekunden
-unsigned long handleTrafficLightsWithMillis()
-{
-  currentMillis = millis();
-  static unsigned long previousMillis = 0;
-  if (currentMillis - previousMillis >= TLClock)
-  {
-    previousMillis = currentMillis;
-  }
-  return currentMillis;
-}
-
-void handleTrafficLights(int switchNum, int RED1, int GREEN1, int RED2, int GREEN2, int YELLOW)
+// Function to handle the traffic lights
+void handleTrafficLights(int switchNum, int TLClock, int RED1, int GREEN1, int RED2, int GREEN2, int YELLOW)
 {
   static unsigned long lastSwitchMillis = 0;
   currentMillis = millis();
