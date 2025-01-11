@@ -2,9 +2,10 @@
 #include <Arduino.h>
 #include "SPI.h"
 #include "MFRC522.h"
+#include "pipeline.h"
 
-#define RST_PIN 17 // 22 Pin für den Reset
-#define SS_PIN 5   // 21 Pin
+#define RST_PIN 17
+#define SS_PIN 5
 
 extern unsigned long currentMillis;
 

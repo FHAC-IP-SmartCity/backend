@@ -47,12 +47,18 @@ int authorizeRfidCard(int GREEN1, const byte authorizedIDs[][7])
         if (digitalRead(GREEN1) == HIGH) // Traffic light is green
         {
           // TODO: Add send int to frontend
-          return 2; // Ampel 1 ist grün
+          // pipeline.send(1100, static_cast<int64_t>(2));
+          return 2;
+
+          // TODO: Could be 1 as well
+          // pipeline.send(1100, static_cast<int64_t>(1));
+          // return 1;
         }
         else // Traffic light is red
         {
           // TODO: Add send int to frontend
-          return 3; // Ampel 1 ist rot
+          // pipeline.send(1100, static_cast<int64_t>(3));
+          return 3;
         }
       }
     }
@@ -124,6 +130,8 @@ void handleTrafficLights(int switchNum, int TLClock, int RED1, int GREEN1, int R
       }
       lastSwitchMillis = currentMillis;
     }
+
+    // pipeline.send(1100, static_cast<int64_t>(4));
     break;
   }
 }
