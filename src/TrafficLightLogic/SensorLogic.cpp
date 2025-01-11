@@ -10,16 +10,6 @@ int TLClock = 20000;
 // RFID-Reader initialisieren
 MFRC522 rfid(SS_PIN, RST_PIN);
 
-// Autorisierte Karten-IDs
-const byte authorizedIDs[][7] = {
-    {0x4, 0xAD, 0xA1, 0xA5, 0x6E, 0x26, 0x81},
-    {0x4, 0xC9, 0xA7, 0xA5, 0x6E, 0x26, 0x81},
-    {0x4, 0xA6, 0xB2, 0xA5, 0x6E, 0x26, 0x81},
-    {0x4, 0x42, 0x6D, 0xA5, 0x6E, 0x26, 0x81},
-    {0x4, 0x8E, 0x61, 0xA6, 0x6E, 0x26, 0x81}};
-
-const int numIDs = sizeof(authorizedIDs) / sizeof(authorizedIDs[0]);
-
 void initializeTrafficLights(int RED1, int GREEN1, int RED2, int GREEN2, int YELLOW)
 {
   SPI.begin();
@@ -46,8 +36,11 @@ bool compareIDs(const byte *id1, const byte *id2, byte length)
 }
 
 // Funktion zur Verarbeitung von RFID-Karten
-int handleSensorMotion(int GREEN1)
+int handleSensorMotion(int GREEN1, const byte authorizedIDs[][7])
 {
+
+  const int numIDs = sizeof(authorizedIDs) / sizeof(authorizedIDs[0]);
+
   if (rfid.PICC_IsNewCardPresent() && rfid.PICC_ReadCardSerial())
   {
     byte readID[7] = {0};

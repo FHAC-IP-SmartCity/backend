@@ -9,7 +9,7 @@
 extern unsigned long currentMillis;
 
 void initializeTrafficLights(int RED1, int GREEN1, int RED2, int GREEN2, int YELLOW);
-int handleSensorMotion(int GREEN1);
+int handleSensorMotion(int GREEN1, const byte authorizedIDs[][7]);
 unsigned long handleTrafficLightsWithMillis();
 void handleTrafficLights(int switchNum, int RED1, int GREEN1, int RED2, int GREEN2, int YELLOW);
 
