@@ -1,7 +1,8 @@
 #include <Arduino.h>
 #include "MFRC522.h"
 #include "SPI.h"
-#include "Sensors/TCRT5000Sensor.h"
+
+#include "Sensors/TCRT5000.h"
 #include "pipeline.h"
 
 #define SS_PIN 5
@@ -11,13 +12,13 @@
 int counter = 0;
 bool motionDetected = false;
 
-TCRT5000Sensor fstTrainWest;
-TCRT5000Sensor sndTrainWest;
+MFRC522 rfidBus(SS_PIN, RST_PIN);
+
+TCRT fstTrainWest;
+TCRT sndTrainWest;
 
 int fstTrainNum = 0;
 int sndTrainNum = 0;
-
-MFRC522 rfidBus(SS_PIN, RST_PIN);
 
 const byte authorizedIDs[][7] = {
     {0x4, 0xAD, 0xA1, 0xA5, 0x6E, 0x26, 0x81},
@@ -43,6 +44,7 @@ void setup()
 {
     SPI.begin();
     rfidBus.PCD_Init();
+    pipeline.open();
     pipeline.println("Scan PICC to see UID.");
 
     pinMode(13, OUTPUT);
@@ -65,21 +67,22 @@ void loop()
             readID[i] = rfidBus.uid.uidByte[i];
         }
 
-        // Überprüfen, ob die Karte autorisiert ist
+        // Check if the scanned ID is in the authorized IDs
         for (int i = 0; i < numIDs; i++)
         {
             if (compareIDs(readID, authorizedIDs[i], 7))
             {
-                pipeline.println("Karte autorisiert!");
-                // TODO send bool: true to server
+                pipeline.println("Bus is on bus stop.");
+                pipeline.send(3110, static_cast<int64_t>(1));
+
                 rfidBus.PICC_HaltA();
                 rfidBus.PCD_StopCrypto1();
                 return;
             }
         }
 
-        pipeline.println("Karte nicht autorisiert.");
-        // TODO send bool: true to server
+        pipeline.println("Not a bus.");
+        pipeline.send(3110, static_cast<int64_t>(0));
 
         rfidBus.PICC_HaltA();
         rfidBus.PCD_StopCrypto1();
@@ -89,11 +92,12 @@ void loop()
     {
         if (!motionDetected)
         {
-            pipeline.println("Bewegung erkannt!");
-            // TODO send int: counter to server
-            pipeline.println(static_cast<int64_t>(counter));
+            pipeline.println("Motion detected.");
             counter++;
             motionDetected = true;
+
+            pipeline.println(static_cast<int64_t>(counter));
+            pipeline.send(3110, static_cast<int64_t>(counter));
         }
     }
     else
@@ -107,23 +111,28 @@ void loop()
     int fstTrainNum = fstTrainWest.getTCRTValue();
     int sndTrainNum = sndTrainWest.getTCRTValue();
 
-    Serial.println(fstTrainNum);
-    Serial.println(sndTrainNum);
+    pipeline.println(static_cast<int64_t>(fstTrainNum));
+    pipeline.println(static_cast<int64_t>(sndTrainNum));
 
     if (fstTrainNum > 2000 && sndTrainNum > 2000)
     {
         pipeline.println(static_cast<int64_t>(fstTrainNum));
         pipeline.println(static_cast<int64_t>(sndTrainNum));
-        // TODO send bool1: true to server
-        // TODO send bool2: true to server
+        pipeline.send(3210, static_cast<int64_t>(1));
+        pipeline.send(3220, static_cast<int64_t>(1));
     }
     else if (fstTrainNum > 2000)
     {
         pipeline.println(static_cast<int64_t>(fstTrainNum));
-        // TODO send bool1: true to server
-        // if (fst...) send id and num 1
+        pipeline.send(3210, static_cast<int64_t>(1));
+        pipeline.send(3220, static_cast<int64_t>(0));
+    }
+    else
+    {
+        pipeline.send(3210, static_cast<int64_t>(0));
+        pipeline.send(3220, static_cast<int64_t>(0));
     }
 
     digitalWrite(13, LOW);
-    delay(100);
+    delay(1000);
 }
