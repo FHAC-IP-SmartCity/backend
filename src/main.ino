@@ -1,11 +1,11 @@
 #include <Arduino.h>
-#include "Sensors/TCRT5000Sensor.h"
+#include "Sensors/TCRT5000.h"
 
-TCRT5000Sensor fstTrain;
-TCRT5000Sensor sndTrain;
-TCRT5000Sensor fstPark;
-TCRT5000Sensor sndPark;
-TCRT5000Sensor trdPark;
+TCRT fstTrain;
+TCRT sndTrain;
+TCRT fstPark;
+TCRT sndPark;
+TCRT trdPark;
 
 #define pirPin 13
 #define ledPin 17
@@ -41,72 +41,65 @@ void loop()
     trdPark.read();
     trdParkNum = trdPark.getTCRTValue();
 
+    // TODO send data to server
+
+    // Train detection
     if (fstTrainNum >= 1 && sndTrainNum >= 1)
     {
-        Serial.println("All trains are in the station");
-        // TODO send bool1: true to server
-        // TODO send bool2: true to server
+        pipeline.println("All trains are in the station");
+
+        // pipeline.send(2210, static_cast<int64_t>(1));
+        // pipeline.send(2220, static_cast<int64_t>(1));
     }
     else if (sndTrainNum >= 1)
     {
-        Serial.println("Train driving in the station");
-        // TODO send bool: true to server
+        pipeline.println("Train driving in the station");
+        // pipeline.send(2220, static_cast<int64_t>(1));
+    }
+    else
+    {
+        // pipeline.send(2210, static_cast<int64_t>(0));
+        // pipeline.send(2220, static_cast<int64_t>(0));
     }
 
+    // Parking spot detection
+    if (fstParkNum >= 1)
+    {
+        pipeline.println("First parking spot is occupied");
+        // pipeline.send(2230, static_cast<int64_t>(1));
+    }
+
+    if (sndParkNum >= 1)
+    {
+        pipeline.println("Second parking spot is occupied");
+        // pipeline.send(2240, static_cast<int64_t>(1));
+    }
+
+    if (trdParkNum >= 1)
+    {
+        pipeline.println("Third parking spot is occupied");
+        // pipeline.send(2250, static_cast<int64_t>(1));
+    }
+
+    else
+    {
+        // pipeline.send(2230, static_cast<int64_t>(0));
+        // pipeline.send(2240, static_cast<int64_t>(0));
+        // pipeline.send(2250, static_cast<int64_t>(0));
+    }
+
+    // PIR sensor motion detection
     if (digitalRead(pirPin) == HIGH)
     {
         digitalWrite(ledPin, HIGH);
-        Serial.println("Motion detected");
-        // TODO send bool: true to server
+        pipeline.println("Motion detected");
+        // pipeline.send(2310, static_cast<int64_t>(1));
     }
     else
     {
         digitalWrite(ledPin, LOW);
-        // TODO send bool: false to server
+        // pipeline.send(2310, static_cast<int64_t>(0));
     }
-
-    if (fstParkNum >= 1)
-    {
-        pipeline.println("First parking spot is occupied");
-        // TODO send bool: true to server
-    }
-    else
-    {
-        // TODO send bool: false to server
-    }
-    if (sndParkNum >= 1)
-    {
-        pipeline.println("Second parking spot is occupied");
-        // TODO send bool: true to server
-    }
-    else
-    {
-        // TODO send bool: false to server
-    }
-    if (trdParkNum >= 1)
-    {
-        pipeline.println("Third parking spot is occupied");
-        // TODO send bool: true to server
-    }
-    else
-    {
-        // TODO send bool: false to server
-    }
-
-    Serial.print("Train1: ");
-    Serial.println(fstTrainNum);
-
-    Serial.print("Train2: ");
-    Serial.println(sndTrainNum);
-
-    Serial.print("Park1: ");
-    Serial.println(fstParkNum);
-
-    Serial.print("Park2: ");
-    Serial.println(sndParkNum);
-
-    Serial.print("Park3: ");
-    Serial.println(trdParkNum);
 
     delay(1000);
 }
