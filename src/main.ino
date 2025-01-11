@@ -1,57 +1,47 @@
 #include <Arduino.h>
 #include "Sensors/TCRT5000.h"
 
-TCRT fstTrain;
-TCRT sndTrain;
-TCRT fstPark;
-TCRT sndPark;
-TCRT trdPark;
+#define NUM_SENSORS 5
+#define PIR_PIN 13
+#define LED_PIN 17
 
-#define pirPin 13
-#define ledPin 17
-
-int fstTrainNum = 0;
-int sndTrainNum = 0;
-int fstParkNum = 0;
-int sndParkNum = 0;
-int trdParkNum = 0;
+// Pins für die TCRT-Sensoren       Train1 Train2 Park1 Park2 Park3
+const int sensorPins[NUM_SENSORS] = {12, 14, 27, 26, 25};
+TCRT sensors[NUM_SENSORS];
+int sensorValues[NUM_SENSORS] = {0};
 
 void setup()
 {
-    pinMode(pirPin, INPUT);
-    pinMode(ledPin, OUTPUT);
+    pinMode(PIR_PIN, INPUT);
+    pinMode(LED_PIN, OUTPUT);
 
-    fstTrain.init(12);
-    sndTrain.init(14);
-    fstPark.init(27);
-    sndPark.init(26);
-    trdPark.init(25);
+    // Initialisiere alle TCRT-Sensoren
+    for (int i = 0; i < NUM_SENSORS; i++)
+    {
+        sensors[i].init(sensorPins[i]);
+    }
 }
 
 void loop()
 {
-    fstTrain.read();
-    fstTrainNum = fstTrain.getTCRTValue();
-    sndTrain.read();
-    sndTrainNum = sndTrain.getTCRTValue();
-    fstPark.read();
-    fstParkNum = fstPark.getTCRTValue();
-    sndPark.read();
-    sndParkNum = sndPark.getTCRTValue();
-    trdPark.read();
-    trdParkNum = trdPark.getTCRTValue();
+    // Lese alle Sensorwerte
+    for (int i = 0; i < NUM_SENSORS; i++)
+    {
+        sensors[i].read();
+        sensorValues[i] = sensors[i].getTCRTValue();
+    }
 
     // TODO send data to server
 
     // Train detection
-    if (fstTrainNum >= 1 && sndTrainNum >= 1)
+    if (sensorValues[0] >= 3000 && sensorValues[1] >= 3000)
     {
         pipeline.println("All trains are in the station");
 
         // pipeline.send(2210, static_cast<int64_t>(1));
         // pipeline.send(2220, static_cast<int64_t>(1));
     }
-    else if (sndTrainNum >= 1)
+    else if (sensorValues[1] >= 3000)
     {
         pipeline.println("Train driving in the station");
         // pipeline.send(2220, static_cast<int64_t>(1));
@@ -63,41 +53,29 @@ void loop()
     }
 
     // Parking spot detection
-    if (fstParkNum >= 1)
+    for (int i = 2; i < NUM_SENSORS; i++)
     {
-        pipeline.println("First parking spot is occupied");
-        // pipeline.send(2230, static_cast<int64_t>(1));
-    }
-
-    if (sndParkNum >= 1)
-    {
-        pipeline.println("Second parking spot is occupied");
-        // pipeline.send(2240, static_cast<int64_t>(1));
-    }
-
-    if (trdParkNum >= 1)
-    {
-        pipeline.println("Third parking spot is occupied");
-        // pipeline.send(2250, static_cast<int64_t>(1));
-    }
-
-    else
-    {
-        // pipeline.send(2230, static_cast<int64_t>(0));
-        // pipeline.send(2240, static_cast<int64_t>(0));
-        // pipeline.send(2250, static_cast<int64_t>(0));
+        if (sensorValues[i] >= 1)
+        {
+            pipeline.println((String("Parking spot ") + (i - 1) + " is occupied").c_str());
+            // pipeline.send(2230 + (i - 2) * 10, static_cast<int64_t>(1));
+        }
+        else
+        {
+            // pipeline.send(2230 + (i - 2) * 10, static_cast<int64_t>(0));
+        }
     }
 
     // PIR sensor motion detection
-    if (digitalRead(pirPin) == HIGH)
+    if (digitalRead(PIR_PIN) == HIGH)
     {
-        digitalWrite(ledPin, HIGH);
+        digitalWrite(LED_PIN, HIGH);
         pipeline.println("Motion detected");
         // pipeline.send(2310, static_cast<int64_t>(1));
     }
     else
     {
-        digitalWrite(ledPin, LOW);
+        digitalWrite(LED_PIN, LOW);
         // pipeline.send(2310, static_cast<int64_t>(0));
     }
 
