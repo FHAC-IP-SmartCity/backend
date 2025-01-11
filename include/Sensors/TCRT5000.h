@@ -4,12 +4,20 @@
 #include <Arduino.h>
 #include "pipeline.h"
 
-class TCRT5000Sensor
+class TCRT
 {
 public:
     void init(uint8_t pin = 32);
     void read();
-    int getTCRTValue() { return tcrtValue; }
+    int getTCRTValue()
+    {
+        if (tcrtValue >= 4095)
+        {
+            tcrtValue = 3000;
+        }
+
+        return tcrtValue;
+    }
 
 private:
     int tcrtValue;
