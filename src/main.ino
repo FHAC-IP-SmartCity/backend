@@ -36,14 +36,14 @@ void loop()
     // Train detection
     if (sensorValues[0] >= 3000 && sensorValues[1] >= 3000)
     {
-        pipeline.println("All trains are in the station");
+        pipeline.println("Train in station");
 
         pipeline.send(2210, static_cast<int64_t>(1));
         pipeline.send(2220, static_cast<int64_t>(1));
     }
     else if (sensorValues[1] >= 3000)
     {
-        pipeline.println("Train driving in the station");
+        pipeline.println("Train driving into station");
         pipeline.send(2220, static_cast<int64_t>(1));
         pipeline.send(2210, static_cast<int64_t>(0));
     }
