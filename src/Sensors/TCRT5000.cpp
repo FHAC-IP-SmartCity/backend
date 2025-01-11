@@ -1,13 +1,13 @@
-#include "Sensors/TCRT5000Sensor.h"
+#include "Sensors/TCRT5000.h"
 
-void TCRT5000Sensor::init(uint8_t pin)
+void TCRT::init(uint8_t pin)
 {
     this->pin = pin;
     pinMode(pin, INPUT);
     Serial.println("TCRT5000 Infrarotsensor erfolgreich initialisiert.");
 }
 
-void TCRT5000Sensor::read()
+void TCRT::read()
 {
     tcrtValue = analogRead(pin);
 }
