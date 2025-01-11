@@ -96,7 +96,7 @@ void loop()
             motionDetected = true;
 
             pipeline.println(static_cast<int64_t>(counter));
-            pipeline.send(3110, static_cast<int64_t>(counter));
+            pipeline.send(3310, static_cast<int64_t>(counter));
         }
     }
     else
