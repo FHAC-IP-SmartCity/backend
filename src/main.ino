@@ -1,15 +1,23 @@
-#include <Arduino.h>
-#include "MFRC522.h"
-#include "SPI.h"
 #include "TrafficLightLogic/SensorLogic.h"
+
+// Autorisierte Karten-IDs
+const byte authorizedIDs[][7] = {
+    {0x4, 0xAD, 0xA1, 0xA5, 0x6E, 0x26, 0x81},
+    {0x4, 0xC9, 0xA7, 0xA5, 0x6E, 0x26, 0x81},
+    {0x4, 0xA6, 0xB2, 0xA5, 0x6E, 0x26, 0x81},
+    {0x4, 0x42, 0x6D, 0xA5, 0x6E, 0x26, 0x81},
+    {0x4, 0x8E, 0x61, 0xA6, 0x6E, 0x26, 0x81}};
+
+int TLClock = 20000;
 
 void setup()
 {
-    initializeMotionSensors(32, 14, 12, 27, 26, 13);
+    pipeline.open();
+    initializeTrafficLights(14, 12, 27, 26, 13);
 }
 
 void loop()
 {
-    int switchNum = handleSensorMotion(GREEN_LIGHT_PIN_1);
-    handleTrafficLights(switchNum, 14, 12, 27, 26, 13);
+    int switchNum = authorizeRfidCard(12, authorizedIDs);
+    handleTrafficLights(switchNum, TLClock, 14, 12, 27, 26, 13);
 }

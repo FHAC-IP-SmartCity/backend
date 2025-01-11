@@ -1,28 +1,15 @@
 #include "TrafficLightLogic/SensorLogic.h"
-#include <SPI.h>
-#include <MFRC522.h>
 
-// Pins für RFID
-#define RST_PIN 22
-#define SS_PIN 21
-
-volatile bool fstMotionDetected = false;
-unsigned long currentMillis = 0;
-int TLClock = 20000;
-
-// RFID-Reader initialisieren
+// initialize the RFID reader
 MFRC522 rfid(SS_PIN, RST_PIN);
 
-// Autorisierte Karten-ID
-const String authorizedCardID = "745acf5b";
-const String authorizedCardID2 = "b0e3f7b1";
+unsigned long currentMillis = 0;
 
-void initializeMotionSensors(int PIR, int RED1, int GREEN1, int RED2, int GREEN2, int YELLOW)
+// Function to initialize the traffic lights
+void initializeTrafficLights(int RED1, int GREEN1, int RED2, int GREEN2, int YELLOW)
 {
   SPI.begin();
 
-  // Config Pins
-  pinMode(PIR, INPUT);
   pinMode(RED1, OUTPUT);
   pinMode(GREEN1, OUTPUT);
   pinMode(RED2, OUTPUT);
@@ -33,36 +20,48 @@ void initializeMotionSensors(int PIR, int RED1, int GREEN1, int RED2, int GREEN2
   digitalWrite(RED1, HIGH);
 }
 
-int handleSensorMotion(int GREEN1)
+// Function checks if RFID card is authorized
+int authorizeRfidCard(int GREEN1, const byte authorizedIDs[][7])
 {
-  // Prüfen, ob eine Karte erkannt wurde
+
+  const int numIDs = sizeof(authorizedIDs) / sizeof(authorizedIDs[0]);
+
   if (rfid.PICC_IsNewCardPresent() && rfid.PICC_ReadCardSerial())
   {
-    // Karten-ID auslesen
-    String cardID = "";
-    for (byte i = 0; i < rfid.uid.size; i++)
+    byte readID[7] = {0};
+    for (byte i = 0; i < rfid.uid.size && i < 7; i++)
     {
-      cardID += String(rfid.uid.uidByte[i], HEX);
+      readID[i] = rfid.uid.uidByte[i];
     }
 
-    Serial.println("RFID Card ID: " + cardID);
+    // Check if the ID is authorized
+    for (int i = 0; i < numIDs; i++)
+    {
+      if (compareIDs(readID, authorizedIDs[i], 7))
+      {
+        pipeline.println("Priority card detected.");
 
-    // Karten-ID vergleichen
-    if (cardID.equalsIgnoreCase(authorizedCardID) && digitalRead(GREEN1) == HIGH)
-    {
-      Serial.println("Authorized card detected!");
-      return 2; // Ignore the motion sensor
-    }
-    else if (cardID.equalsIgnoreCase(authorizedCardID) && digitalRead(GREEN1) == LOW)
-    {
-      Serial.println("Authorized card detected!");
-      return 3; // Schalte die Ampel
-    }
-    else
-    {
-      Serial.println("Unauthorized card detected.");
+        rfid.PICC_HaltA();
+        rfid.PCD_StopCrypto1();
+
+        if (digitalRead(GREEN1) == HIGH) // Traffic light is green
+        {
+          pipeline.send(1100, static_cast<int64_t>(2));
+          return 2;
+
+          // TODO: Could be 1 as well
+          // pipeline.send(1100, static_cast<int64_t>(1));
+          // return 1;
+        }
+        else // Traffic light is red
+        {
+          pipeline.send(1100, static_cast<int64_t>(3));
+          return 3;
+        }
+      }
     }
 
+    pipeline.println("No prioritiy card detected.");
     rfid.PICC_HaltA();
     rfid.PCD_StopCrypto1();
   }
@@ -70,27 +69,15 @@ int handleSensorMotion(int GREEN1)
   return 0;
 }
 
-// Ampelsteuerung mit Millisekunden
-unsigned long handleTrafficLightsWithMillis()
-{
-  currentMillis = millis();
-  static unsigned long previousMillis = 0;
-  if (currentMillis - previousMillis >= TLClock)
-  {
-    previousMillis = currentMillis;
-  }
-  return currentMillis;
-}
-
-void handleTrafficLights(int switchNum, int RED1, int GREEN1, int RED2, int GREEN2, int YELLOW)
+// Function to handle the traffic lights
+void handleTrafficLights(int switchNum, int TLClock, int RED1, int GREEN1, int RED2, int GREEN2, int YELLOW)
 {
   static unsigned long lastSwitchMillis = 0;
   currentMillis = millis();
 
   switch (switchNum)
   {
-  case 1:
-    // Extend time
+  case 1: // Expand time for green light
     digitalWrite(GREEN1, HIGH);
     digitalWrite(RED1, LOW);
     digitalWrite(GREEN2, LOW);
@@ -98,10 +85,10 @@ void handleTrafficLights(int switchNum, int RED1, int GREEN1, int RED2, int GREE
     lastSwitchMillis = currentMillis;
     break;
 
-  case 2:
+  case 2: // Ignore RFID card
     break;
-  case 3:
-    // Schalte die Ampel
+
+  case 3: // Switch to other traffic light
     digitalWrite(GREEN1, LOW);
     digitalWrite(GREEN2, LOW);
     digitalWrite(YELLOW, HIGH);
@@ -115,9 +102,11 @@ void handleTrafficLights(int switchNum, int RED1, int GREEN1, int RED2, int GREE
     lastSwitchMillis = currentMillis;
     break;
 
-  default:
-    if (currentMillis - lastSwitchMillis >= 20000)
+  default: // Switch traffic light after TLClock
+    if (currentMillis - lastSwitchMillis >= TLClock)
     {
+      pipeline.send(1100, static_cast<int64_t>(4));
+
       digitalWrite(GREEN1, LOW);
       digitalWrite(GREEN2, LOW);
       digitalWrite(YELLOW, HIGH);
@@ -142,4 +131,15 @@ void handleTrafficLights(int switchNum, int RED1, int GREEN1, int RED2, int GREE
     }
     break;
   }
+}
+
+// Function to compare card IDs
+bool compareIDs(const byte *id1, const byte *id2, byte length)
+{
+  for (byte i = 0; i < length; i++)
+  {
+    if (id1[i] != id2[i])
+      return false;
+  }
+  return true;
 }
