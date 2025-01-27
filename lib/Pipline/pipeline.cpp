@@ -137,11 +137,6 @@ void PipeLine::print(double value)
 
 bool PipeLine::ping(uint8_t timeout)
 {
-    if (!this->isOpen())
-    {
-        return false;
-    }
-
     this->send(2, int64_t(0));
 
     unsigned long start = millis();
@@ -151,12 +146,13 @@ bool PipeLine::ping(uint8_t timeout)
 
     if (Serial.available() <= 0)
     {
+        this->o = false;
         return false;
     }
 
     uint8_t status = Serial.read();
-
-    return status == 1;
+    this->o = status == 1;
+    return this->o;
 }
 
 bool PipeLine::isOpen()
